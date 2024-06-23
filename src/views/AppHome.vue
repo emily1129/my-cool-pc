@@ -74,6 +74,7 @@
 <script>
 import ItemCard from "@/components/ItemCard";
 import ItemModal from "@/components/ItemModal";
+import Mock from "mockjs";
 
 export default {
   name: "AppHome",
@@ -86,7 +87,7 @@ export default {
       selected: 0,
       selectedSort: "title-asc",
       itemModal: false,
-      categories: [
+      categoriess: [
         {
           id: "vr",
           name: "品牌小主機、AIO｜VR虛擬",
@@ -165,31 +166,54 @@ export default {
           ],
         },
       ],
+      categories: [],
     };
   },
+  created() {
+    this.fetchMockData();
+  },
   methods: {
+    fetchMockData() {
+      const mockData = Mock.mock({
+        "categories|2-3": [
+          {
+            id: "@guid",
+            name: "@title(3, 5)", 
+            "limit": 4, // TODO
+            "items|4-8": [
+              {
+                id: "@guid",
+                title: "@title(8, 15)",
+                "imgSrc|1": ["src/assets/cool-1.jpeg", "src/assets/item-6.jpeg"],
+                price: "@integer(100, 1000)", 
+                isHotItem: "@boolean",
+              },
+            ],
+          },
+        ],
+      });
+      // Assign data to categories
+      this.categories = mockData.categories;
+    },
     openItemModal(item) {
-      // Handle opening item modal
-      console.log("Clicked item:", item);
       this.itemModal = true;
-      // Implement modal logic here
+      console.log("Clicked tem:", item);
     },
 
     getLimitedItems(category) {
-      // Apply price filter first
       let limitedItems = category.items.slice(0, category.limit);
       return this.sortItems(limitedItems);
     },
 
     showSeeMoreButton(category) {
-      // Show "See More" button if there are more items to display
+      // show button if items > limits
       return category.items.length > category.limit;
     },
 
     seeMore(category) {
-      // Increase the limit to show more items
       category.limit += 4;
     },
+
     sortItems(items) {
       // Sort items based on the selected sorting option (selectedSort)
       if (this.selectedSort === "title-asc") {
@@ -201,7 +225,6 @@ export default {
       } else if (this.selectedSort === "price-desc") {
         return items.sort((a, b) => b.price - a.price);
       }
-      // Default return (should not normally reach here)
       return items;
     },
   },
