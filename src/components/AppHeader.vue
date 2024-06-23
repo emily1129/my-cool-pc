@@ -1,6 +1,6 @@
 <template>
   <div
-    class="flex bg-grad items-center w-full border-b-4 border-gradient border-gradient-blue bg-white"
+    class="flex items-center w-full border-b-4 border-gradient border-gradient-blue bg-white"
   >
     <div
       class="w-48 mr-2 text-blueGray-800 text-5xl header-font"

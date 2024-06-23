@@ -16,7 +16,7 @@
         </h5>
         <div
           v-if="isHotItem === true"
-          class="inline-block px-4 text-xs rounded-full hot-item py-1 text-white"
+          class="inline-block px-4 text-xs rounded-full hot-item py-1 my-3 text-white"
         >
           熱賣
         </div>
