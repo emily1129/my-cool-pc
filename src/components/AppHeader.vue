@@ -8,7 +8,7 @@
     >
       COOLPC
     </div>
-    <div class="ml-auto">
+    <div class="ml-auto flex space-x-3">
       <DarkModeToggle />
       <button class="text-xs my-auto">
         <svg
