@@ -28,6 +28,8 @@ body {
   --slate-body: 51 65 85;
 
   background: rgba(var(--background));
+  --neutral-light: 34, 39, 43;
+
 }
 
 .dark {
@@ -42,4 +44,6 @@ body {
   --slate-body: 148 163 184;
 
   background: rgba(var(--background));
+  --neutral-light: 241,242,244;
+
 }
