@@ -1,63 +1,59 @@
 <template>
-  <div class="w-full space-y-4 mx-auto">
-    <div class="w-full mx-auto transform space-y-5">
-      <div>
-        <div v-for="category in categories" :key="category.id" class="mb-6">
-          <div class="border-t border-b border-slate-500 mb-4">
-            <h4 class="category-name">
-              {{ category.name }}
-            </h4>
-          </div>
+  <div class="w-full space-y-4 mx-auto flex md:flex-col">
+    <AppSidebar
+      :categories="categories"
+      :category-name="categoryName"
+      @category-selected="handleCategorySelected"
+      class="w-1/4 md:w-full h-auto m-3 md:mx-0"
+    />
+    <!-- Loading Skeleton -->
+    <ItemSkeleton v-if="isLoading" class="w-3/4 mx-auto transform space-y-5" />
 
-          <div class="flex items-center p-4 m-auto max-w-6xl">
-            <label for="sort" class="dark-body">Sort by:</label>
-            <select
-              v-model="selectedSort"
-              @change="sortItems"
-              class="w-auto block px-2 py-1 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-            >
-              <option value="title-asc">Title (A-Z)</option>
-              <option value="title-desc">Title (Z-A)</option>
-              <option value="price-asc">Price: Low to High</option>
-              <option value="price-desc">Price: High to Low</option>
-            </select>
-          </div>
-
-          <template v-if="category.items.length">
-            <div class="flex content-start flex-wrap max-w-6xl m-auto">
-              <div
-                v-for="item in getLimitedItems(category)"
-                :key="item.id"
-                class="w-1/4 lg:w-1/3 md:w-1/2 sm:w-full p-3"
-              >
-                <ItemCard
-                  class="cursor-pointer"
-                  v-bind="item"
-                  :event-types="itemType"
-                  @click="
-                    () => {
-                      itemModal = true;
-                    }
-                  "
-                />
-              </div>
-            </div>
-            <div
-              v-if="showSeeMoreButton(category)"
-              class="flex justify-center mt-4"
-            >
-              <button
-                @click="seeMore(category)"
-                class="border-2 border-Gray-900 text-xs text-zinc-400 px-3 py-2 rounded-full shadow hover:shadow-lg ease-in transition-shadow hover:border-zinc-500 hover:border-1 transform duration-500"
-              >
-                See More...
-              </button>
-            </div>
-          </template>
-          <template v-else>
-            <div class="mx-auto">暫無更多商品</div>
-          </template>
+    <!-- Main Content -->
+    <div v-else class="w-3/4 md:w-full mx-auto transform space-y-5">
+      <div
+        v-for="category in displayedCategories"
+        :key="category.id"
+        class="mb-6"
+      >
+        <div class="border-b border-slate-500 mb-4">
+          <h4 class="category-name">{{ category.name }}</h4>
         </div>
+        <SortSelect v-model="category.selectedSort" />
+        <template v-if="category.items.length">
+          <div class="flex content-start flex-wrap max-w-6xl m-auto">
+            <div
+              v-for="item in getLimitedItems(category)"
+              :key="item.id"
+              class="w-1/4 lg:w-1/3 md:w-1/2 sm:w-full p-3"
+            >
+              <ItemCard
+                class="cursor-pointer"
+                v-bind="item"
+                :id="Number(item.id)"
+                @click="
+                  () => {
+                    itemModal = true;
+                  }
+                "
+              />
+            </div>
+          </div>
+          <div
+            v-if="showSeeMoreButton(category)"
+            class="flex justify-center mt-4"
+          >
+            <button
+              @click="seeMore(category)"
+              class="border rounded-full px-3 py-2 border-zinc-500 text-xs text-zinc-700 shadow ease-in hover:bg-zinc-800 hover:text-zinc-100 hover:shadow-lg transition-shadow transform duration-400"
+            >
+              See More...
+            </button>
+          </div>
+        </template>
+        <template v-else>
+          <div class="mx-auto">暫無更多商品</div>
+        </template>
       </div>
     </div>
     <ItemModal
@@ -74,155 +70,119 @@
 <script>
 import ItemCard from "@/components/ItemCard";
 import ItemModal from "@/components/ItemModal";
-import Mock from "mockjs";
+import SortSelect from "@/components/SortSelect";
+import AppSidebar from "@/components/AppSidebar";
+import ItemSkeleton from "../components/ItemSkeleton";
+import mockData from "@/mockData";
 
 export default {
   name: "AppHome",
   components: {
     ItemCard,
     ItemModal,
+    SortSelect,
+    ItemSkeleton,
+    AppSidebar,
   },
   data() {
     return {
-      selected: 0,
       selectedSort: "title-asc",
       itemModal: false,
-      categoriess: [
-        {
-          id: "vr",
-          name: "品牌小主機、AIO｜VR虛擬",
-          limit: 4, // Initial limit of items to display
-          items: [
-            {
-              title: "ASUS G22CH-714700004W i7-14700 / 8G DDR5 / 512G / WIN11",
-              id: 1,
-              imgSrc: "src/assets/cool-1.jpeg",
-              price: 41990,
-              isHotItem: true,
-            },
-            {
-              title: "ASUS G22CH-714700004W i7-14700 / 8G DDR5 / 512G / WIN11",
-              id: 2,
-              imgSrc: "src/assets/cool-1.jpeg",
-              price: 45990,
-              isHotItem: true,
-            },
-            {
-              title: "ASUS G22CH-714700004W i7-14700 / 8G DDR5 / 512G / WIN11",
-              id: 3,
-              imgSrc: "src/assets/cool-1.jpeg",
-              price: 35990,
-              isHotItem: false,
-            },
-            {
-              title: "ASUS G22CH-714700004W i7-14700 / 8G DDR5 / 512G / WIN11",
-              id: 4,
-              imgSrc: "src/assets/cool-1.jpeg",
-              price: 45790,
-              isHotItem: false,
-            },
-            {
-              title: "ASUS G22CH-714700004W i7-14700 / 8G DDR5 / 512G / WIN11",
-              id: 5,
-              imgSrc: "src/assets/cool-1.jpeg",
-              price: 25990,
-              isHotItem: true,
-            },
-          ],
-        },
-        {
-          id: 2,
-          name: "Category Two",
-          limit: 4,
-          items: [
-            {
-              id: 6,
-              title: "Item 6",
-              imgSrc: "src/assets/item-6.jpeg",
-              price: 200,
-              isHotItem: true,
-            },
-            {
-              id: 7,
-              title: "Item 7",
-              imgSrc: "src/assets/item-7.jpeg",
-              price: 130,
-              isHotItem: false,
-            },
-            {
-              id: 8,
-              title: "Item 8",
-              imgSrc: "src/assets/item-8.jpeg",
-              price: 110,
-              isHotItem: true,
-            },
-            {
-              id: 9,
-              title: "Item 9",
-              imgSrc: "src/assets/item-9.jpeg",
-              price: 140,
-              isHotItem: false,
-            },
-          ],
-        },
-      ],
+      isLoading: true,
       categories: [],
+      categoryName: "",
+      SelectedCategory: null,
     };
   },
-  created() {
-    this.fetchMockData();
+  computed: {
+    displayedCategories() {
+      if (this.SelectedCategory) {
+        return [this.SelectedCategory];
+      }
+      return this.categories;
+    },
+    sortedItems() {
+      return (category) => {
+        if (category.selectedSort === "title-asc") {
+          return [...category.items].sort((a, b) =>
+            a.title.localeCompare(b.title)
+          );
+        } else if (category.selectedSort === "title-desc") {
+          return [...category.items].sort((a, b) =>
+            b.title.localeCompare(a.title)
+          );
+        } else if (category.selectedSort === "price-asc") {
+          return [...category.items].sort((a, b) => a.price - b.price);
+        } else if (category.selectedSort === "price-desc") {
+          return [...category.items].sort((a, b) => b.price - a.price);
+        }
+        return category.items;
+      };
+    },
+  },
+  mounted() {
+    this.fetchCategories(this.categoryName);
+  },
+  watch: {
+    categoryId: {
+      immediate: true,
+      handler(newCategoryId) {
+        if (newCategoryId && this.categories.length > 0) {
+          console.log(this.SelectedCategory);
+          this.SelectedCategory = this.categories.find(
+            (category) => category.id === newCategoryId
+          );
+        }
+      },
+    },
   },
   methods: {
-    fetchMockData() {
-      const mockData = Mock.mock({
-        "categories|2-3": [
-          {
-            id: "@guid",
-            name: "@title(3, 5)", 
-            "limit": 4, // TODO
-            "items|4-8": [
-              {
-                id: "@guid",
-                title: "@title(8, 15)",
-                "imgSrc|1": ["src/assets/cool-1.jpeg", "src/assets/item-6.jpeg"],
-                price: "@integer(100, 1000)", 
-                isHotItem: "@boolean",
-              },
-            ],
-          },
-        ],
-      });
-      // Assign data to categories
-      this.categories = mockData.categories;
+    handleCategorySelected(categoryName) {
+      this.isLoading = true;
+      this.fetchCategories(categoryName);
+      this.updateURL(categoryName);
+    },
+    fetchCategories(categoryName = null) {
+      setTimeout(() => {
+        this.categories = mockData.map((category) => ({
+          ...category,
+          items: this.sortItems(category.items, "title-asc"), // Sort items initially
+          selectedSort: "title-asc",
+          limit: 4, // Initialize limit
+        }));
+        this.isLoading = false;
+        if (categoryName) {
+          this.SelectedCategory = this.categories.find(
+            (category) => category.name === categoryName
+          );
+        }
+      }, 2000);
+    },
+    updateURL(categoryName) {
+      this.$router.push({ query: { category: categoryName } });
     },
     openItemModal(item) {
       this.itemModal = true;
-      console.log("Clicked tem:", item);
+      console.log(item);
     },
-
     getLimitedItems(category) {
-      let limitedItems = category.items.slice(0, category.limit);
-      return this.sortItems(limitedItems);
+      const sortedItems = this.sortedItems(category);
+      return sortedItems.slice(0, category.limit);
     },
-
     showSeeMoreButton(category) {
-      // show button if items > limits
       return category.items.length > category.limit;
     },
-
     seeMore(category) {
       category.limit += 4;
     },
-
-    sortItems(items) {
-      // Sort items based on the selected sorting option (selectedSort)
-      if (this.selectedSort === "title-asc") {
+    sortItems(items, selectedSort) {
+      if (selectedSort === "title-asc") {
         return items.sort((a, b) => a.title.localeCompare(b.title));
-      } else if (this.selectedSort === "title-desc") {
+      } else if (selectedSort === "title-desc") {
         return items.sort((a, b) => b.title.localeCompare(a.title));
-      } else if (this.selectedSort === "price-asc") {
+      } else if (selectedSort === "price-asc") {
         return items.sort((a, b) => a.price - b.price);
-      } else if (this.selectedSort === "price-desc") {
+      } else if (selectedSort === "price-desc") {
         return items.sort((a, b) => b.price - a.price);
       }
       return items;
@@ -231,7 +191,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 @import "../assets/css/index.css";
 
 .dropdown:hover .dropdown-menu {
@@ -244,7 +204,8 @@ export default {
 }
 .category-name {
   @apply max-w-6xl m-auto text-2xl font-medium p-4;
-  color: rgba(var(--copy-primary));
+  /* color: rgba(var(--copy-primary)); */
+  color: rgba(var(--neutral-light));
 }
 
 .dark-body {
