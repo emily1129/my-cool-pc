@@ -1,6 +1,6 @@
 <template>
   <div
-    class="group bg-white h-96 shadow-sm border-trueGray-200 overflow-hidden item-card-border"
+    class="group bg-white h-96 shadow-sm border-trueGray-200 overflow-hidden item-card-border hover:shadow-lg transition-shadow"
   >
     <div class="flex flex-col h-full">
       <div class="flex-grow w-full object-cover rounded-b-none overflow-hidden">
@@ -12,7 +12,7 @@
       </div>
       <div class="p-3 h-48">
         <h5 class="title text-trueGray-700 font-bold text-sm overflow-hidden">
-          {{ title }}
+          {{ truncateText(title, 10) }}
         </h5>
         <div
           v-if="isHotItem === true"
@@ -87,6 +87,13 @@ export default {
   methods: {
     toItem() {
       this.$router.push({ name: "Item", params: { id: this.id } });
+    },
+    truncateText(text, wordLimit) {
+      const words = text.split(" ");
+      if (words.length > wordLimit) {
+        return words.slice(0, wordLimit).join(" ") + "...";
+      }
+      return text;
     },
   },
 };
