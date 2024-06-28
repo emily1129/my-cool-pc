@@ -2,7 +2,7 @@
   <div class="h-auto bg-white">
     <button
       @click="toggleMainCategory"
-      class="w-full text-left text-lg font-bold border-t border-b border-gray-300 p-3 flex justify-between items-center"
+      class="w-full text-left text-lg font-bold border-t border-b border-gray-300 p-3 flex justify-between items-center hover:shadow-lg"
     >
       Category
       <svg

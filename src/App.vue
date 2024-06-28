@@ -1,5 +1,5 @@
 <template>
-  <div id="app" class="overflow-auto">
+  <div id="app" class="overflow-auto scroll-smooth">
     <AppHeader class="w-full h-16 px-32 md:px-4" />
     <div class="flex w-10/12 m-auto space-x-2">
       <router-view :selectedCategory="selectedCategory" class="home-bg" />
