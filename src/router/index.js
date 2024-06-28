@@ -12,8 +12,19 @@ const routes = [
     path: '/',
     name: 'AppHome',
     component: () => import("@/views/AppHome.vue"),
-    props: (route) => ({ categoryId: route.query.category }),
   },
+  {
+  path: '/category/:categoryName',
+    name: 'Category',
+    component: () => import("@/views/AppHome.vue"),
+    props: (route) => ({ categoryName: route.params.categoryName }),
+  },
+  {
+    path: '/item/:itemId',
+    name: 'ItemDetail',
+    component: () => import("@/views/ItemDetail.vue"),
+    props: (route) => ({ itemId: route.params.itemId }),
+  }
 ];
 
 const router = new VueRouter({

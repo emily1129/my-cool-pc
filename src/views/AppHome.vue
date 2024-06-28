@@ -6,6 +6,7 @@
       @category-selected="handleCategorySelected"
       class="w-1/4 md:w-full h-auto m-3 md:mx-0"
     />
+    
     <!-- Loading Skeleton -->
     <ItemSkeleton v-if="isLoading" class="w-3/4 mx-auto transform space-y-5" />
 
@@ -31,11 +32,6 @@
                 class="cursor-pointer"
                 v-bind="item"
                 :id="Number(item.id)"
-                @click="
-                  () => {
-                    itemModal = true;
-                  }
-                "
               />
             </div>
           </div>
@@ -56,30 +52,20 @@
         </template>
       </div>
     </div>
-    <ItemModal
-      :toggle="itemModal"
-      :backdrop="
-        () => {
-          itemModal = false;
-        }
-      "
-    />
   </div>
 </template>
 
 <script>
 import ItemCard from "@/components/ItemCard";
-import ItemModal from "@/components/ItemModal";
 import SortSelect from "@/components/SortSelect";
 import AppSidebar from "@/components/AppSidebar";
-import ItemSkeleton from "../components/ItemSkeleton";
+import ItemSkeleton from "@/components/ItemSkeleton";
 import mockData from "@/mockData";
 
 export default {
   name: "AppHome",
   components: {
     ItemCard,
-    ItemModal,
     SortSelect,
     ItemSkeleton,
     AppSidebar,
@@ -87,12 +73,17 @@ export default {
   data() {
     return {
       selectedSort: "title-asc",
-      itemModal: false,
+      itemModal: true,
       isLoading: true,
       categories: [],
-      categoryName: "",
       SelectedCategory: null,
     };
+  },
+  props: {
+    categoryName: {
+      type: String,
+      default: null,
+    },
   },
   computed: {
     displayedCategories() {
@@ -124,13 +115,11 @@ export default {
     this.fetchCategories(this.categoryName);
   },
   watch: {
-    categoryId: {
-      immediate: true,
-      handler(newCategoryId) {
-        if (newCategoryId && this.categories.length > 0) {
-          console.log(this.SelectedCategory);
+    categoryName: {
+      handler(newCategoryName) {
+        if (newCategoryName && this.categories.length > 0) {
           this.SelectedCategory = this.categories.find(
-            (category) => category.id === newCategoryId
+            (category) => category.name === newCategoryName
           );
         }
       },
@@ -159,7 +148,7 @@ export default {
       }, 2000);
     },
     updateURL(categoryName) {
-      this.$router.push({ query: { category: categoryName } });
+      this.$router.push({ name: 'Category', params: { categoryName } });
     },
     openItemModal(item) {
       this.itemModal = true;
@@ -186,7 +175,7 @@ export default {
         return items.sort((a, b) => b.price - a.price);
       }
       return items;
-    },
+    }
   },
 };
 </script>
