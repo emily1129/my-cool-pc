@@ -1,6 +1,7 @@
 <template>
   <div
     class="group bg-white h-96 shadow-sm border-trueGray-200 overflow-hidden item-card-border hover:shadow-lg transition-shadow"
+    @click="toItemDetail"
   >
     <div class="flex flex-col h-full">
       <div class="flex-grow w-full object-cover rounded-b-none overflow-hidden">
@@ -10,25 +11,20 @@
           class="w-auto h-full transform transition-transform duration-500 group-hover:scale-125 bg-cover bg-center bg-origin-content m-auto"
         />
       </div>
-      <div class="p-3 h-48">
+      <div class="p-3 h-48 flex flex-col justify-between">
         <h5 class="title text-trueGray-700 font-bold text-sm overflow-hidden">
-          {{ truncateText(title, 10) }}
+          {{ truncateText(title, 7) }}
         </h5>
         <div
           v-if="isHotItem === true"
-          class="inline-block px-4 text-xs rounded-full hot-item py-1 my-3 text-white"
+          class="w-11 px-2 text-xs border border-hot-item py-0.5 border-gradient text-red-600"
         >
           熱賣
         </div>
-        <div class="flex justify-between mt-4">
-          <h3 class="text-2xl text-pc-dark-blue font-semibold">
+        <div class="mt-4">
+          <h3 class="text-xl text-pc-dark-blue font-semibold mb-0">
             {{ "$" + price }}
           </h3>
-          <div class="">
-            <button
-              class="text-pc-dark-blue w-8 h-8 self-center bg-center add bg-no-repeat"
-            />
-          </div>
         </div>
       </div>
     </div>
@@ -62,32 +58,40 @@ export default {
       type: Boolean,
       default: false,
     },
-  },
-  computed: {
-    pillStyle() {
-      let classes = "";
-
-      switch (this.eventType) {
-        case 1:
-          classes = "text-amber-400 border-amber-400";
-          break;
-        case 2:
-          classes = "text-rise-red border-rise-red";
-          break;
-        case 3:
-          classes = "text-lime-600 border-lime-600";
-          break;
-      }
-      return classes;
+    size: {
+      type: String,
+      required: true,
     },
-    eventTypeLabel() {
-      return this.eventTypes.find((t) => t.id === this.eventType)?.value || "";
+    cpu: {
+      type: String,
+      required: false,
+    },
+    ram: {
+      type: String,
+      required: false,
+    },
+    ssd: {
+      type: String,
+      required: false,
+    },
+    vga: {
+      type: String,
+      required: false,
+    },
+    lan: {
+      type: String,
+      required: false,
+    },
+    others: {
+      type: String,
+      required: false,
+    },
+    os: {
+      type: String,
+      required: false,
     },
   },
   methods: {
-    toItem() {
-      this.$router.push({ name: "Item", params: { id: this.id } });
-    },
     truncateText(text, wordLimit) {
       const words = text.split(" ");
       if (words.length > wordLimit) {
@@ -95,33 +99,14 @@ export default {
       }
       return text;
     },
+    toItemDetail() {
+      this.$router.push({ name: "ItemDetail", params: { itemId: this.id } });
+    },
   },
 };
 </script>
 
 <style scoped>
-.avatar {
-  grid-area: avatar;
-}
-.event-type {
-  grid-area: event-type;
-}
-.title {
-  grid-area: title;
-}
-.budget-info {
-  grid-area: budget-info;
-}
-.date-range {
-  grid-area: date-range;
-}
-.reward {
-  grid-area: reward;
-}
-.add {
-  background-image: url(~@/assets/add.svg);
-}
-
 .item-card-border {
   border: 1.5px solid transparent;
   /* border-radius: 10px; */
@@ -132,8 +117,7 @@ export default {
   border-image-slice: 1;
   /* border-radius: 10px; */
 }
-
-.hot-item {
-  background: linear-gradient(to right, #ff9213, #ff3737);
+.border-hot-item {
+  border-image-source: linear-gradient(to right, #ff9213, #ff3737);
 }
 </style>
