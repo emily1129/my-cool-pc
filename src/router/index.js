@@ -22,7 +22,7 @@ const routes = [
   {
     path: '/item/:itemId',
     name: 'ItemDetail',
-    component: () => import("@/views/ItemDetail.vue"),
+    component: () => import("@/views/Item/ItemDetail.vue"),
     props: (route) => ({ itemId: route.params.itemId }),
   }
 ];
