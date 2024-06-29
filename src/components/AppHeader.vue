@@ -1,13 +1,62 @@
 <template>
   <div
-    class="flex items-center w-full border-b-4 border-gradient border-gradient-blue bg-white"
+    class="flex items-center w-full border-b-4 border-gradient border-gradient-blue bg-white z-50"
   >
-    <div
-      class="w-48 mr-2 text-blueGray-800 text-5xl header-font"
-      @click="toHome"
-    >
-      COOLPC
+    <div class="w-48 mr-2 text-blueGray-800 text-5xl header-font">COOLPC</div>
+    <!-- search -->
+    <div class="flex items-center flex-grow mx-4">
+      <input
+        v-model="inputSearch"
+        @input="onSearch"
+        @focus="expandSearch"
+        @blur="collapseSearch"
+        type="text"
+        placeholder="Search..."
+        class="w-full px-4 py-2 border rounded-lg focus:outline-none"
+      />
     </div>
+    <!-- search Results -->
+    <transition name="fade">
+      <div
+        v-if="showResults"
+        class="absolute top-16 left-0 w-full bg-white shadow-lg py-8 z-50"
+      >
+        <div class="w-10/12 mx-auto">
+          <h2 class="text-xl italic font-light mb-4">
+            Results for "{{ inputSearch }}..."
+          </h2>
+          <div class="overflow-x-auto overflow-y-hidden">
+            <div v-if="filteredItems.length !== 0" class="flex space-x-7">
+              <div
+                v-for="item in filteredItems"
+                :key="item.id"
+                @click="toItemDetail"
+                class="flex min-w-72 max-w-72 h-28 bg-white border border-gray-400 shadow-sm rounded-lg"
+              >
+                <img
+                  src="https://dlcdnwebimgs.asus.com/gain/ac709e89-8fca-4cf5-b63b-f0426714078b/w185/fwebp"
+                  :alt="item.title"
+                  class="w-1/2 h-28 object-cover border-r border-gray-400"
+                />
+                <div class="w-1/2 p-2 text-sm flex flex-col justify-between">
+                  <p
+                    class="font-bold text-gray-900 overflow-hidden h-10 leading-tight"
+                  >
+                    <span class="line-clamp-2">{{ item.title }}</span>
+                  </p>
+                  <span class="text-gray-900 font-semibold mt-auto"
+                    >${{ item.price }}</span
+                  >
+                </div>
+              </div>
+            </div>
+            <div v-else>
+              <p>No Matching Result!</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </transition>
     <div class="ml-auto flex space-x-3">
       <DarkModeToggle />
       <button class="text-xs my-auto">
@@ -38,14 +87,39 @@ export default {
   components: {
     DarkModeToggle,
   },
+  props: {
+    searchQuery: String,
+    filteredItems: Array,
+  },
   data() {
     return {
+      inputSearch: this.searchQuery || "",
+      showResults: false,
       isDarkMode: false,
     };
   },
   methods: {
-    toHome() {
-      this.$router.push({ name: "AppHeader" });
+    onSearch() {
+      this.$emit("search", {
+        query: this.inputSearch,
+      });
+    },
+    expandSearch() {
+      this.showResults = true;
+    },
+
+    collapseSearch() {
+      setTimeout(() => {
+        this.showResults = false;
+      }, 200);
+    },
+    toItemDetail() {
+      this.$router.push({ name: "ItemDetail", params: { itemId: this.id } });
+    },
+  },
+  watch: {
+    searchQuery(newVal) {
+      this.inputSearch = newVal;
     },
   },
 };
@@ -64,5 +138,13 @@ export default {
 }
 .bg-grad {
   background: linear-gradient(to right, #4b579d, #347afc, #3f97fc, #343b61);
+}
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.5s;
+}
+.fade-enter,
+.fade-leave-to {
+  opacity: 0;
 }
 </style>
