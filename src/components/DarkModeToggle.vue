@@ -1,11 +1,36 @@
 <template>
   <div class="dark-mode-toggle" @click="toggleTheme">
-    <span class="toggle-label">Dark Mode</span>
-    <div class="toggle-switch" :class="{ 'dark-mode-active': isDarkMode }">
-      <div
-        class="toggle-circle"
-        :class="{ 'circle-dark-mode': isDarkMode }"
-      ></div>
+    <div class="icon-container">
+      <svg
+        v-if="!isDarkMode"
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke-width="1.5"
+        stroke="currentColor"
+        class="icon"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          d="M12 3v2.25m6.364.386-1.591 1.591M21 12h-2.25m-.386 6.364-1.591-1.591M12 18.75V21m-4.773-4.227-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0Z"
+        />
+      </svg>
+      <svg
+        v-if="isDarkMode"
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke-width="1.5"
+        stroke="currentColor"
+        class="icon"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          d="M21.752 15.002A9.72 9.72 0 0 1 18 15.75c-5.385 0-9.75-4.365-9.75-9.75 0-1.33.266-2.597.748-3.752A9.753 9.753 0 0 0 3 11.25C3 16.635 7.365 21 12.75 21a9.753 9.753 0 0 0 9.002-5.998Z"
+        />
+      </svg>
     </div>
   </div>
 </template>
@@ -14,7 +39,7 @@
 import { ref, onMounted } from "vue";
 
 export default {
-  name: 'DarkModeToggle',
+  name: "DarkModeToggle",
   setup() {
     const isDarkMode = ref(false);
 
@@ -60,39 +85,19 @@ export default {
   user-select: none;
 }
 
-.toggle-label {
-  margin-right: 8px;
-  font-size: 18px;
-  color: #fff;
+.icon-container {
+  width: 24px;
+  height: 24px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
-.toggle-switch {
-  width: 50px;
-  height: 25px;
-  background: #ccc;
-  border-radius: 25px;
-  position: relative;
-  transition: background 0.3s;
+.icon {
+  width: 24px;
+  height: 24px;
 }
 
-.toggle-switch .toggle-circle {
-  width: 23px;
-  height: 23px;
-  background: #fff;
-  border-radius: 50%;
-  position: absolute;
-  top: 1px;
-  left: 1px;
-  transition: left 0.3s;
-}
-
-.toggle-switch.dark-mode-active {
-  background: #4a90e2;
-}
-
-.toggle-switch .circle-dark-mode {
-  left: 26px;
-}
 body.dark {
   --bg-color: #333;
   --text-color: #fff;
