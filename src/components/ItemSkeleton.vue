@@ -1,7 +1,7 @@
 <template>
   <div class="space-y-4 animate-pulse">
     <div class="mx-auto transform space-y-5">
-      <div v-for="n in 3" :key="n" class="mb-6 p-4">
+      <div v-for="n in 2" :key="n" class="mb-6 p-4">
         <div class="border-b border-slate-500 mb-4">
           <div class="h-12 w-full p-2 bg-gray-300 rounded"></div>
         </div>
