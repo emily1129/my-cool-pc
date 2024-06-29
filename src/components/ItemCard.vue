@@ -1,6 +1,6 @@
 <template>
   <div
-    class="group bg-white h-96 shadow-sm border-trueGray-200 overflow-hidden item-card-border hover:shadow-lg transition-shadow"
+    class="group bg-white h-96 shadow-sm border-trueGray-200 overflow-hidden item-card-border dark:dark-item-card-border hover:shadow-lg transition-shadow dark:bg-slate-800 rounded-md hover:rounded-md"
     @click="toItemDetail"
   >
     <div class="flex flex-col h-full">
@@ -12,17 +12,17 @@
         />
       </div>
       <div class="p-3 h-48 flex flex-col justify-between">
-        <h5 class="title text-trueGray-700 font-bold text-sm overflow-hidden">
-          {{ truncateText(title, 7) }}
+        <h5 class="title text-slate-900 font-normal text-md overflow-hidden line-clamp-2 dark:text-white">
+          {{ title }}
         </h5>
         <div
           v-if="isHotItem === true"
-          class="w-11 px-2 text-xs border border-hot-item py-0.5 border-gradient text-red-600"
+          class="w-11 px-2 text-xs border border-hot-item py-0.5 border-gradient text-red-600 dark:text-red-500"
         >
           熱賣
         </div>
         <div class="mt-4">
-          <h3 class="text-xl text-pc-dark-blue font-semibold mb-0">
+          <h3 class="text-xl text-slate-500 font-medium dark:text-slate-300 tracking-wide	">
             {{ "$" + price }}
           </h3>
         </div>
@@ -43,7 +43,6 @@ export default {
     },
     title: {
       type: String,
-      required: true,
     },
     imgSrc: {
       type: String,
@@ -58,47 +57,8 @@ export default {
       type: Boolean,
       default: false,
     },
-    size: {
-      type: String,
-      required: true,
-    },
-    cpu: {
-      type: String,
-      required: false,
-    },
-    ram: {
-      type: String,
-      required: false,
-    },
-    ssd: {
-      type: String,
-      required: false,
-    },
-    vga: {
-      type: String,
-      required: false,
-    },
-    lan: {
-      type: String,
-      required: false,
-    },
-    others: {
-      type: String,
-      required: false,
-    },
-    os: {
-      type: String,
-      required: false,
-    },
   },
   methods: {
-    truncateText(text, wordLimit) {
-      const words = text.split(" ");
-      if (words.length > wordLimit) {
-        return words.slice(0, wordLimit).join(" ") + "...";
-      }
-      return text;
-    },
     toItemDetail() {
       this.$router.push({ name: "ItemDetail", params: { itemId: this.id } });
     },
@@ -114,6 +74,12 @@ export default {
 .item-card-border:hover {
   border: 1.5px solid transparent;
   border-image: linear-gradient(to right, #2277d9, #31385e);
+  border-image-slice: 1;
+  /* border-radius: 10px; */
+}
+.dark-item-card-border:hover {
+  border: 1.5px solid transparent;
+  border-image: linear-gradient(to right, #06b6d4, rgb(88, 44, 247));
   border-image-slice: 1;
   /* border-radius: 10px; */
 }
