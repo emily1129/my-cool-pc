@@ -1,12 +1,16 @@
 <template>
   <div class="w-full space-y-4 mx-auto flex md:flex-col">
-    <AppSidebar
-      :categories="categories"
-      :category-name="categoryName"
-      @category-selected="handleCategorySelected"
-      class="w-1/4 md:w-full h-auto m-3 md:mx-0"
-    />
-    
+    <div class="w-1/4 md:w-full h-auto mr-2 md:mx-0 sticky top-0">
+      <CategorySelection
+        :categories="categories"
+        :category-name="categoryName"
+        @category-selected="handleCategorySelected"
+      />
+      <BrandCheckbox
+        :unique-brands="uniqueBrands"
+        @filters-changed="handleBrandSelection"
+      />
+    </div>
     <!-- Loading Skeleton -->
     <ItemSkeleton v-if="isLoading" class="w-3/4 mx-auto transform space-y-5" />
 
