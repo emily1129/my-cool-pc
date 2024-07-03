@@ -1,18 +1,22 @@
 <template>
   <div
-    class="flex items-center w-full border-b-4 border-gradient border-gradient-blue bg-white z-50"
+    class="flex items-center w-full border-b-3 shadow-lg border-gradient border-gradient-blue bg-white dark:bg-slate-900 z-50"
   >
-    <div class="w-48 mr-2 text-blueGray-800 text-5xl header-font">COOLPC</div>
+    <div
+      class="w-48 mr-2 text-blueGray-800 dark:text-blueGray-50 text-5xl header-font"
+    >
+      COOLPC
+    </div>
     <!-- search -->
     <div class="flex items-center flex-grow mx-4">
       <input
         v-model="inputSearch"
-        @input="onSearch"
+        @input="handleSearch"
         @focus="expandSearch"
         @blur="collapseSearch"
         type="text"
         placeholder="Search..."
-        class="w-full px-4 py-2 border rounded-lg focus:outline-none"
+        class="w-full px-4 py-2 border rounded-lg focus:outline-none dark:bg-slate-800 dark:hover:bg-slate-700"
       />
     </div>
     <!-- search Results -->
@@ -30,8 +34,8 @@
               <div
                 v-for="item in filteredItems"
                 :key="item.id"
-                @click="toItemDetail"
-                class="flex min-w-72 max-w-72 h-28 bg-white border border-gray-400 shadow-sm rounded-lg"
+                @click="toItemDetail(item.id)"
+                class="flex min-w-72 max-w-72 h-28 bg-white border border-gray-400 shadow-sm rounded-lg cursor-pointer"
               >
                 <img
                   src="https://dlcdnwebimgs.asus.com/gain/ac709e89-8fca-4cf5-b63b-f0426714078b/w185/fwebp"
@@ -57,7 +61,7 @@
         </div>
       </div>
     </transition>
-    <div class="ml-auto flex space-x-3">
+    <div class="ml-auto flex space-x-3 dark:text-slate-200">
       <DarkModeToggle />
       <button class="text-xs my-auto">
         <svg
@@ -81,45 +85,63 @@
 
 <script>
 import DarkModeToggle from "./DarkModeToggle.vue";
+import mockData from "@/mockData";
 
 export default {
   name: "AppHeader",
   components: {
     DarkModeToggle,
   },
-  props: {
-    searchQuery: String,
-    filteredItems: Array,
-  },
   data() {
     return {
-      inputSearch: this.searchQuery || "",
+      inputSearch: "",
       showResults: false,
       isDarkMode: false,
+      filteredItems: [],
+      items: [],
     };
   },
   methods: {
-    onSearch() {
-      this.$emit("search", {
-        query: this.inputSearch,
-      });
-    },
     expandSearch() {
       this.showResults = true;
     },
-
+    fetchData() {
+      this.items = mockData;
+      this.filteredItems = this.items.flatMap((category) => category.items);
+    },
+    handleSearch() {
+      this.fetchData();
+      this.filterItems(this.inputSearch);
+    },
+    filterItems(query) {
+      const allItems = [];
+      this.items.forEach((category) => {
+        allItems.push(...category.items);
+      });
+      if (query) {
+        this.filteredItems = allItems.filter(
+          (item) =>
+            (item.title &&
+              item.title.toLowerCase().includes(query.toLowerCase())) ||
+            (item.brand &&
+              item.brand.toLowerCase().includes(query.toLowerCase()))
+        );
+      } else {
+        this.filteredItems = allItems;
+      }
+    },
     collapseSearch() {
       setTimeout(() => {
         this.showResults = false;
       }, 200);
     },
-    toItemDetail() {
-      this.$router.push({ name: "ItemDetail", params: { itemId: this.id } });
+    toItemDetail(itemId) {
+      this.$router.push({ name: "ItemDetail", params: { itemId } });
     },
   },
   watch: {
-    searchQuery(newVal) {
-      this.inputSearch = newVal;
+    inputSearch(newVal) {
+      this.handleSearch(newVal);
     },
   },
 };

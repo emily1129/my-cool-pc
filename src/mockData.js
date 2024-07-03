@@ -7,7 +7,7 @@ Mock.Random.extend({
   }
 });
 const mockData = Mock.mock({
-  "categories|1-5": [
+  "categories|1-20": [
     {
       id: "@increment",
       name: "@title(1, 3)",
@@ -18,7 +18,7 @@ const mockData = Mock.mock({
           id: "@increment",
           title: "@title(8, 13)",
           "imgSrc|1": ["src/assets/cool-1.jpeg", "src/assets/item-6.jpeg"],
-          price: "@integer(100, 30000)",
+          price: "@integer(100, 20000)",
           isHotItem: "@boolean",
             size: "@sentence(1, 5)",
             cpu: "@sentence(1, 2)",

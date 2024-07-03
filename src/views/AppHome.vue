@@ -20,7 +20,16 @@
         <div class="border-b border-slate-500 mb-4">
           <h4 class="category-name">{{ category.name }}</h4>
         </div>
-        <SortSelect v-model="category.selectedSort" />
+        <div class="flex md:flex-col justify-start">
+          <SortSelect v-model="category.selectedSort" :id="category.id" />
+          <PriceSlider
+            :maxPrice="getMaxPrice(category)"
+            @price-changed="
+              (priceRange) => handleCategoryPriceChange(priceRange, category.id)
+            "
+            :id="category.id"
+          />
+        </div>
         <template v-if="category.items.length">
           <div class="flex content-start flex-wrap max-w-6xl m-auto">
             <div
@@ -41,14 +50,16 @@
           >
             <button
               @click="seeMore(category)"
-              class="border rounded-full px-3 py-2 border-zinc-500 text-xs text-zinc-700 shadow ease-in hover:bg-zinc-800 hover:text-zinc-100 hover:shadow-lg transition-shadow transform duration-400"
+              class="border rounded-full px-3 py-2 text-slate-700 dark:text-slate-300 dark:hover:text-slate-900 text-xs border-slate-500 hover:bg-slate-300 shadow hover:shadow-lg ease-in transition-shadow transform duration-300"
             >
               See More...
             </button>
           </div>
         </template>
         <template v-else>
-          <div class="mx-auto">暫無更多商品</div>
+          <div class="max-w-6xl text-center dark:text-slate-300">
+            No Matching Results!
+          </div>
         </template>
       </div>
     </div>
@@ -58,7 +69,9 @@
 <script>
 import ItemCard from "@/components/ItemCard";
 import SortSelect from "@/components/SortSelect";
-import AppSidebar from "@/components/AppSidebar";
+import CategorySelection from "@/components/CategorySelection";
+import BrandCheckbox from "@/components/BrandCheckbox";
+import PriceSlider from "@/components/PriceSlider";
 import ItemSkeleton from "@/components/ItemSkeleton";
 import mockData from "@/mockData";
 
@@ -68,15 +81,18 @@ export default {
     ItemCard,
     SortSelect,
     ItemSkeleton,
-    AppSidebar,
+    CategorySelection,
+    BrandCheckbox,
+    PriceSlider,
   },
   data() {
     return {
-      selectedSort: "title-asc",
-      itemModal: true,
       isLoading: true,
       categories: [],
       SelectedCategory: null,
+      uniqueBrands: [],
+      selectedPrice: [1, 10000],
+      categoryPriceRanges: {}, // Store price ranges for each category
     };
   },
   props: {
@@ -112,51 +128,64 @@ export default {
     },
   },
   mounted() {
-    this.fetchCategories(this.categoryName);
+    this.fetchData();
   },
   watch: {
-    categoryName: {
-      handler(newCategoryName) {
-        if (newCategoryName && this.categories.length > 0) {
-          this.SelectedCategory = this.categories.find(
-            (category) => category.name === newCategoryName
-          );
-        }
-      },
+    categoryName(newCategoryName) {
+      if (newCategoryName && this.categories.length > 0) {
+        this.SelectedCategory = this.categories.find(
+          (category) => category.name === newCategoryName
+        );
+      }
     },
   },
   methods: {
-    handleCategorySelected(categoryName) {
-      this.isLoading = true;
-      this.fetchCategories(categoryName);
-      this.updateURL(categoryName);
-    },
-    fetchCategories(categoryName = null) {
+    fetchData() {
       setTimeout(() => {
         this.categories = mockData.map((category) => ({
           ...category,
-          items: this.sortItems(category.items, "title-asc"), // Sort items initially
+          items: [...category.items], // fetch without any filter/sorting
           selectedSort: "title-asc",
-          limit: 4, // Initialize limit
+          limit: 4,
         }));
+
+        this.uniqueBrands = [
+          ...new Set(
+            this.categories.flatMap((category) =>
+              category.items.map((item) => item.brand)
+            )
+          ),
+        ];
+
         this.isLoading = false;
-        if (categoryName) {
-          this.SelectedCategory = this.categories.find(
-            (category) => category.name === categoryName
-          );
-        }
       }, 2000);
     },
-    updateURL(categoryName) {
-      this.$router.push({ name: 'Category', params: { categoryName } });
+    handleCategorySelected(categoryName) {
+      this.SelectedCategory = this.categories.find(
+        (category) => category.name === categoryName
+      );
+      this.updateURL(categoryName);
     },
-    openItemModal(item) {
-      this.itemModal = true;
-      console.log(item);
+    handleBrandSelection(selectedBrands) {
+      this.categories.forEach((category) => {
+        if (selectedBrands.length === 0) {
+          // show all items if no brands are selected
+          category.items = mockData.find(
+            (data) => data.id === category.id
+          ).items;
+        } else {
+          // otherwise filter items by selected brands
+          category.items = mockData
+            .find((data) => data.id === category.id)
+            .items.filter((item) => selectedBrands.includes(item.brand));
+        }
+      });
+    },
+    updateURL(categoryName) {
+      this.$router.push({ name: "Category", params: { categoryName } });
     },
     getLimitedItems(category) {
-      const sortedItems = this.sortedItems(category);
-      return sortedItems.slice(0, category.limit);
+      return this.sortedItems(category).slice(0, category.limit);
     },
     showSeeMoreButton(category) {
       return category.items.length > category.limit;
@@ -164,17 +193,25 @@ export default {
     seeMore(category) {
       category.limit += 4;
     },
-    sortItems(items, selectedSort) {
-      if (selectedSort === "title-asc") {
-        return items.sort((a, b) => a.title.localeCompare(b.title));
-      } else if (selectedSort === "title-desc") {
-        return items.sort((a, b) => b.title.localeCompare(a.title));
-      } else if (selectedSort === "price-asc") {
-        return items.sort((a, b) => a.price - b.price);
-      } else if (selectedSort === "price-desc") {
-        return items.sort((a, b) => b.price - a.price);
+    handleCategoryPriceChange(newPrice, categoryId) {
+      this.$set(this.categoryPriceRanges, categoryId, newPrice);
+      this.filterItemsByCategoryPrice(newPrice, categoryId);
+    },
+    filterItemsByCategoryPrice([minPrice, maxPrice], categoryId) {
+      const category = this.categories.find(
+        (category) => category.id === categoryId
+      );
+      if (category) {
+        category.items = mockData
+          .find((data) => data.id === category.id)
+          .items.filter(
+            (item) => item.price >= minPrice && item.price <= maxPrice
+          );
       }
-      return items;
+    },
+    getMaxPrice(category) {
+      const categoryMaxValue = Math.max(...category.items.map(item => item.price))
+      return categoryMaxValue;
     }
   },
 };
