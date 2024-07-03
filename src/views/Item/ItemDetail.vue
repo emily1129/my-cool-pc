@@ -1,20 +1,16 @@
 <template>
   <div
-    class="w-full mx-auto my-5 p-4 flex md:flex-col justify-center items-center space-y-2 bg-white dark:bg-slate-800 rounded-md"
+    class="w-full mx-auto my-5 p-8 flex md:flex-col justify-center items-center space-y-2 bg-white dark:bg-slate-700 rounded-md"
   >
-    <div class="h-full w-1/2 md:w-full">
-      <div
-        class="w-full h-full flex object-cover rounded-b-none overflow-hidden"
-      >
-        <div class="flex flex-col">
-          <p></p>
+    <div class="h-full w-1/2 md:w-full font-normal dark:text-white">
+        <div class="flex flex-col mx-auto">
+          <p>Breadcrumb > FFFF</p>
           <img
             src="https://dlcdnwebimgs.asus.com/gain/ac709e89-8fca-4cf5-b63b-f0426714078b/w185/fwebp"
             alt="item-img"
-            class="w-1/2 md:w-full items-center transform transition-transform duration-500 group-hover:scale-125 bg-cover bg-center bg-origin-content m-auto"
+            class="w-2/3 items-center transform transition-transform duration-500 group-hover:scale-125 bg-cover bg-center bg-origin-content m-auto"
           />
         </div>
-      </div>
     </div>
     <div
       class="w-1/2 md:w-full px-3 flex flex-col items-start justify-between text-md text-coolGray-600 space-y-8"
@@ -69,7 +65,7 @@
           </button>
         </div>
         <button
-          class="w-1/2 md:w-full h-12 flex items-center justify-center space-x-2 px-6 md:py-2 font-semibold text-white bg-red-600 rounded-lg hover:bg-red-700 focus:outline-none hover:scale-105 transition duration-500 ease-in-out"
+          class="w-1/2 md:w-full h-12 flex items-center justify-center space-x-2 px-6 md:py-2 font-semibold text-white bg-orange-500 rounded-lg hover:bg-orange-600 focus:outline-none hover:scale-105 transition duration-500 ease-in-out"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"

@@ -50,3 +50,8 @@ body {
   --neutral-light: 241,242,244;
 
 }
+
+.dark-body {
+  @apply block text-sm font-medium mr-3;
+  color: rgba(var(--slate-body));
+}
