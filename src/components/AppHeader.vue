@@ -3,12 +3,12 @@
     class="flex items-center w-full border-b-3 shadow-lg border-gradient border-gradient-blue bg-white dark:bg-slate-900 z-50"
   >
     <div
-      class="w-48 mr-2 text-blueGray-800 dark:text-blueGray-50 text-5xl header-font"
+      class="w-48 mr-2 text-slate-800 dark:text-slate-50 text-5xl header-font"
     >
       COOLPC
     </div>
     <!-- search -->
-    <div class="flex items-center flex-grow mx-4">
+    <div class="flex items-center mx-4 my-2">
       <input
         v-model="inputSearch"
         @input="handleSearch"

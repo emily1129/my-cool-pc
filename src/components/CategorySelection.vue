@@ -1,8 +1,8 @@
 <template>
-  <div class="h-auto my-7 sticky">
+  <div class="h-auto m-5 md:mx-1 md:mb-3 sticky">
     <button
       @click="toggleMainCategory"
-      class="w-full bg-neutral-50 text-left text-lg font-bold border border-slate-300 text-slate-800 hover:text-lightBlue-600 p-3 flex justify-between items-center shadow-md hover:shadow-lg dark:border dark:border-slate-500 dark:bg-slate-800 dark:text-white"
+      class="flex justify-between items-center w-full bg-neutral-50 text-left text-lg font-bold shadow-sm border border-slate-200 text-slate-800 hover:text-lightBlue-600 p-3 dark:border-slate-500 dark:bg-slate-800 dark:text-white"
     >
       <div class="flex">
         <svg
@@ -41,7 +41,7 @@
     </button>
     <ul
       v-if="isMainCategoryOpen"
-      class="border-t border-slate-200 bg-white shadow-lg dark:border dark:border-slate-500 dark:bg-slate-800"
+      class="border-t border-slate-200 bg-white dark:border dark:border-slate-500 dark:bg-slate-800"
     >
       <li
         v-for="category in categories"

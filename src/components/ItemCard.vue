@@ -1,6 +1,6 @@
 <template>
   <div
-    class="group bg-white h-96 shadow-sm border-trueGray-200 overflow-hidden item-card-border dark:dark-item-card-border hover:shadow-lg transition-shadow dark:bg-slate-700 rounded-md hover:rounded-md"
+    class="group bg-white h-96 shadow-md border-1 border-neutral-200 overflow-hidden item-card-border dark:dark-item-card-border hover:drop-shadow-xl dark:bg-slate-700 rounded-md hover:rounded-md"
     @click="toItemDetail"
   >
     <div class="flex flex-col h-full">
@@ -23,26 +23,27 @@
         >
           熱賣
         </div>
-        <div class="mt-4 flex justify-between">
+        <div class="mt-4 flex justify-between items-center">
           <h3
             class="my-auto text-xl text-slate-500 font-medium dark:text-slate-300 tracking-wide"
           >
             {{ "$" + price }}
           </h3>
+          <button class="w-8 h-6 hover:bg-orange-500 bg-slate-600 px-2 rounded-sm text-white">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
               viewBox="0 0 24 24"
               stroke-width="1.5"
               stroke="currentColor"
-              class="size-8 text-pc-dark-blue rounded-full hover:shodow-lg"
             >
               <path
                 stroke-linecap="round"
                 stroke-linejoin="round"
-                d="M12 9v6m3-3H9m12 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
+                d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 0 0-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 0 0-16.536-1.84M7.5 14.25 5.106 5.272M6 20.25a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Zm12.75 0a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Z"
               />
             </svg>
+          </button>
         </div>
       </div>
     </div>
@@ -61,6 +62,7 @@ export default {
     },
     title: {
       type: String,
+      required: true,
     },
     imgSrc: {
       type: String,
@@ -85,14 +87,21 @@ export default {
 </script>
 
 <style scoped>
+.item-card-border {
+  border: 1.5px solid white;
+  border-image-slice: 1;
+}
+.dark .item-card-border {
+  border: 1.5px solid #334155;
+  border-image-slice: 1;
+}
 .item-card-border:hover {
-  border: 2px solid transparent;
+  border: 1.5px solid;
   border-image: linear-gradient(to right, #2277d9, #31385e);
   border-image-slice: 1;
-  /* border-radius: 10px; */
 }
 .dark .item-card-border:hover {
-  border: 2px solid transparent;
+  border: 1.5px solid;
   border-image: linear-gradient(to right, #06b6d4, rgb(196, 179, 255));
   border-image-slice: 1;
 }

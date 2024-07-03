@@ -1,8 +1,8 @@
 <template>
-  <div class="h-auto sticky">
+  <div class="h-auto mx-5 md:mx-1">
     <button
       @click="toggleCheckbox"
-      class="w-full bg-neutral-50 text-left text-lg font-bold border border-slate-300 text-slate-800 hover:text-lightBlue-600 p-3 flex justify-between items-center shadow-md hover:shadow-lg dark:border dark:border-slate-500 dark:bg-slate-800 dark:text-white"
+      class="flex justify-between items-center w-full bg-neutral-50 text-left text-lg font-bold border border-slate-200 text-slate-800 hover:text-sky-600 p-3 shadow-sm dark:border dark:border-slate-500 dark:bg-slate-800 dark:text-white"
     >
       <div class="flex">
         <svg
@@ -40,12 +40,12 @@
     </button>
     <ul
       v-if="isCheckboxOpen"
-      class="border-t border-slate-200 bg-white shadow-lg p-4 dark:border dark:border-slate-500 dark:bg-slate-800"
+      class="border-t border-slate-200 bg-white dark:border dark:border-slate-500 dark:bg-slate-800 p-4"
     >
       <li
         v-for="(filter, index) in uniqueBrands"
         :key="index"
-        class="border-b border-slate-200 dark:border-none flex items-center space-x-2 py-2"
+        class="flex items-center space-x-2 py-2"
       >
         <input
           type="checkbox"

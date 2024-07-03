@@ -1,6 +1,8 @@
 <template>
   <div class="w-full space-y-4 mx-auto flex md:flex-col">
     <div class="w-1/4 md:w-full h-auto mr-2 md:mx-0 sticky top-0">
+
+    <!-- Left Sidebar -->
       <CategorySelection
         :categories="categories"
         :category-name="categoryName"
@@ -11,8 +13,9 @@
         @filters-changed="handleBrandSelection"
       />
     </div>
+
     <!-- Loading Skeleton -->
-    <ItemSkeleton v-if="isLoading" class="w-3/4 mx-auto transform space-y-5" />
+    <ItemSkeleton v-if="isLoading" class="w-3/4 md:w-full mx-auto transform space-y-5" />
 
     <!-- Main Content -->
     <div v-else class="w-3/4 md:w-full mx-auto transform space-y-5">
@@ -22,7 +25,7 @@
         class="mb-6"
       >
         <div class="border-b border-slate-500 mb-4">
-          <h4 class="category-name">{{ category.name }}</h4>
+          <p class="category-name">{{ category.name }}</p>
         </div>
         <div class="flex md:flex-col justify-start">
           <SortSelect v-model="category.selectedSort" :id="category.id" />
@@ -44,6 +47,7 @@
               <ItemCard
                 class="cursor-pointer"
                 v-bind="item"
+                :category-name="category.name"
                 :id="Number(item.id)"
               />
             </div>
@@ -54,7 +58,7 @@
           >
             <button
               @click="seeMore(category)"
-              class="border rounded-full px-3 py-2 text-slate-700 dark:text-slate-300 dark:hover:text-slate-900 text-xs border-slate-500 hover:bg-slate-300 shadow hover:shadow-lg ease-in transition-shadow transform duration-300"
+              class="border rounded-full m-2 px-3 py-2 text-xs text-slate-700 dark:text-slate-300 dark:hover:text-slate-900 border-slate-400 hover:bg-font-normal hover:shadow-lg ease-in transition-shadow transform duration-200"
             >
               See More...
             </button>
@@ -233,8 +237,7 @@ export default {
   @apply bg-pc-dark-blue text-white;
 }
 .category-name {
-  @apply max-w-6xl m-auto text-2xl font-medium p-4;
-  /* color: rgba(var(--copy-primary)); */
+  @apply max-w-6xl m-auto text-3xl font-medium p-4;
   color: rgba(var(--neutral-light));
 }
 

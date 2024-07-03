@@ -4,7 +4,7 @@
     <div class="relative">
       <div class="slider h-1 relative bg-slate-300 rounded-md">
         <div
-          class="absolute h-full bg-pc-dark-blue dark:bg-sky-700 rounded-md"
+          class="absolute h-full bg-pc-dark-blue dark:bg-slate-500 rounded-md"
           :style="{ left: `${leftPercent}%`, right: `${rightPercent}%` }"
         ></div>
       </div>
@@ -123,12 +123,12 @@ input[type="number"]::-webkit-inner-spin-button {
 }
 
 input[type="range"]::-webkit-slider-thumb {
-  @apply bg-pc-dark-blue dark:bg-sky-700 w-4 h-4 rounded-full border-none pointer-events-auto;
+  @apply bg-pc-dark-blue dark:bg-slate-500 w-4 h-4 rounded-full border-none pointer-events-auto;
   -webkit-appearance: none;
 }
 
 input[type="range"]::-moz-range-thumb {
-  @apply bg-pc-dark-blue dark:bg-sky-700 w-4 h-4 rounded-full border-none pointer-events-auto;
+  @apply bg-pc-dark-blue dark:bg-slate-500 w-4 h-4 rounded-full border-none pointer-events-auto;
   -moz-appearance: none;
 }
 </style>
