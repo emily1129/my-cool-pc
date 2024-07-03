@@ -1,6 +1,6 @@
 <template>
   <div
-    class="group bg-white h-96 shadow-sm border-trueGray-200 overflow-hidden item-card-border dark:dark-item-card-border hover:shadow-lg transition-shadow dark:bg-slate-800 rounded-md hover:rounded-md"
+    class="group bg-white h-96 shadow-sm border-trueGray-200 overflow-hidden item-card-border dark:dark-item-card-border hover:shadow-lg transition-shadow dark:bg-slate-700 rounded-md hover:rounded-md"
     @click="toItemDetail"
   >
     <div class="flex flex-col h-full">
@@ -8,11 +8,13 @@
         <img
           src="https://dlcdnwebimgs.asus.com/gain/ac709e89-8fca-4cf5-b63b-f0426714078b/w185/fwebp"
           alt="item-img"
-          class="w-auto h-full transform transition-transform duration-500 group-hover:scale-125 bg-cover bg-center bg-origin-content m-auto"
+          class="w-auto h-full border-b border-b-slate-300 transform transition-transform duration-500 group-hover:scale-125 bg-cover bg-center bg-origin-content m-auto"
         />
       </div>
       <div class="p-3 h-48 flex flex-col justify-between">
-        <h5 class="title text-slate-900 font-normal text-md overflow-hidden line-clamp-2 dark:text-white">
+        <h5
+          class="title text-slate-900 font-normal text-md overflow-hidden line-clamp-2 dark:text-white"
+        >
           {{ title }}
         </h5>
         <div
@@ -21,10 +23,26 @@
         >
           熱賣
         </div>
-        <div class="mt-4">
-          <h3 class="text-xl text-slate-500 font-medium dark:text-slate-300 tracking-wide	">
+        <div class="mt-4 flex justify-between">
+          <h3
+            class="my-auto text-xl text-slate-500 font-medium dark:text-slate-300 tracking-wide"
+          >
             {{ "$" + price }}
           </h3>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="1.5"
+              stroke="currentColor"
+              class="size-8 text-pc-dark-blue rounded-full hover:shodow-lg"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M12 9v6m3-3H9m12 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
+              />
+            </svg>
         </div>
       </div>
     </div>
@@ -67,21 +85,16 @@ export default {
 </script>
 
 <style scoped>
-.item-card-border {
-  border: 1.5px solid transparent;
-  /* border-radius: 10px; */
-}
 .item-card-border:hover {
-  border: 1.5px solid transparent;
+  border: 2px solid transparent;
   border-image: linear-gradient(to right, #2277d9, #31385e);
   border-image-slice: 1;
   /* border-radius: 10px; */
 }
-.dark-item-card-border:hover {
-  border: 1.5px solid transparent;
-  border-image: linear-gradient(to right, #06b6d4, rgb(88, 44, 247));
+.dark .item-card-border:hover {
+  border: 2px solid transparent;
+  border-image: linear-gradient(to right, #06b6d4, rgb(196, 179, 255));
   border-image-slice: 1;
-  /* border-radius: 10px; */
 }
 .border-hot-item {
   border-image-source: linear-gradient(to right, #ff9213, #ff3737);

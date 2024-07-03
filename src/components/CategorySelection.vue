@@ -2,7 +2,7 @@
   <div class="h-auto my-7 sticky">
     <button
       @click="toggleMainCategory"
-      class="w-full bg-neutral-50 text-left text-lg font-bold border border-slate-300 text-slate-800 hover:text-lightBlue-600 p-3 flex justify-between items-center shadow-md hover:shadow-lg"
+      class="w-full bg-neutral-50 text-left text-lg font-bold border border-slate-300 text-slate-800 hover:text-lightBlue-600 p-3 flex justify-between items-center shadow-md hover:shadow-lg dark:border dark:border-slate-500 dark:bg-slate-800 dark:text-white"
     >
       <div class="flex">
         <svg
@@ -41,22 +41,22 @@
     </button>
     <ul
       v-if="isMainCategoryOpen"
-      class="border-t border-gray-200 bg-white shadow-lg"
+      class="border-t border-slate-200 bg-white shadow-lg dark:border dark:border-slate-500 dark:bg-slate-800"
     >
       <li
         v-for="category in categories"
         :key="category.id"
-        class="border-b border-gray-200"
+        class="border-b border-slate-200  dark:border-slate-600"
       >
         <button
           @click="selectCategory(category)"
           :class="{
-            'bg-lightBlue-600 text-white':
+            'bg-pc-dark-blue text-white dark:bg-sky-500':
               activeCategory && activeCategory.id === category.id,
           }"
           class="w-full text-left px-4 py-2 flex justify-between items-center"
         >
-          <div class="flex items-center">
+          <div class="flex items-center dark:text-slate-300">
             {{ category.name }}
           </div>
         </button>
@@ -121,4 +121,11 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+.bg-color {
+  background: rgb(26, 32, 44);
+}
+.card-border-color {
+  background-color: #06b6d4
+}
+</style>
