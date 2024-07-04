@@ -1,8 +1,7 @@
 <template>
   <div class="w-full space-y-4 mx-auto flex md:flex-col">
     <div class="w-1/4 md:w-full h-auto mr-2 md:mx-0 sticky top-0">
-
-    <!-- Left Sidebar -->
+      <!-- Left Sidebar -->
       <CategorySelection
         :categories="categories"
         :category-name="categoryName"
@@ -15,7 +14,10 @@
     </div>
 
     <!-- Loading Skeleton -->
-    <ItemSkeleton v-if="isLoading" class="w-3/4 md:w-full mx-auto transform space-y-5" />
+    <ItemSkeleton
+      v-if="isLoading"
+      class="w-3/4 md:w-full mx-auto transform space-y-5"
+    />
 
     <!-- Main Content -->
     <div v-else class="w-3/4 md:w-full mx-auto transform space-y-5">
@@ -49,6 +51,7 @@
                 v-bind="item"
                 :category-name="category.name"
                 :id="Number(item.id)"
+                @show-message="showSuccessAlert"
               />
             </div>
           </div>
@@ -71,6 +74,7 @@
         </template>
       </div>
     </div>
+    <ShowMessage v-if="showSuccess" :message="message" :duration="3000" />
   </div>
 </template>
 
@@ -81,7 +85,9 @@ import CategorySelection from "@/components/CategorySelection";
 import BrandCheckbox from "@/components/BrandCheckbox";
 import PriceSlider from "@/components/PriceSlider";
 import ItemSkeleton from "@/components/ItemSkeleton";
+import ShowMessage from "@/components/SuccessMessage.vue";
 import mockData from "@/mockData";
+import { mapState, mapActions } from "vuex";
 
 export default {
   name: "AppHome",
@@ -92,15 +98,16 @@ export default {
     CategorySelection,
     BrandCheckbox,
     PriceSlider,
+    ShowMessage,
   },
   data() {
     return {
       isLoading: true,
       categories: [],
-      SelectedCategory: null,
       uniqueBrands: [],
       selectedPrice: [1, 10000],
-      categoryPriceRanges: {}, // Store price ranges for each category
+      categoryPriceRanges: {}, // price ranges for each category
+      showSuccess: false,
     };
   },
   props: {
@@ -110,9 +117,12 @@ export default {
     },
   },
   computed: {
+    ...mapState(["activeCategory"]),
     displayedCategories() {
-      if (this.SelectedCategory) {
-        return [this.SelectedCategory];
+      if (this.activeCategory) {
+        return this.categories.filter(
+          (category) => category.name === this.activeCategory
+        );
       }
       return this.categories;
     },
@@ -138,16 +148,8 @@ export default {
   mounted() {
     this.fetchData();
   },
-  watch: {
-    categoryName(newCategoryName) {
-      if (newCategoryName && this.categories.length > 0) {
-        this.SelectedCategory = this.categories.find(
-          (category) => category.name === newCategoryName
-        );
-      }
-    },
-  },
   methods: {
+    ...mapActions(["setActiveCategory"]),
     fetchData() {
       setTimeout(() => {
         this.categories = mockData.map((category) => ({
@@ -166,12 +168,13 @@ export default {
         ];
 
         this.isLoading = false;
+        if (this.categoryName) {
+          this.setActiveCategory(this.categoryName);
+        }
       }, 2000);
     },
     handleCategorySelected(categoryName) {
-      this.SelectedCategory = this.categories.find(
-        (category) => category.name === categoryName
-      );
+      this.setActiveCategory(categoryName);
       this.updateURL(categoryName);
     },
     handleBrandSelection(selectedBrands) {
@@ -218,16 +221,23 @@ export default {
       }
     },
     getMaxPrice(category) {
-      const categoryMaxValue = Math.max(...category.items.map(item => item.price))
+      const categoryMaxValue = Math.max(
+        ...category.items.map((item) => item.price)
+      );
       return categoryMaxValue;
-    }
+    },
+    showSuccessAlert(message) {
+      this.message = message;
+      this.showSuccess = true;
+      setTimeout(() => {
+        this.showSuccess = false;
+      }, 3000);
+    },
   },
 };
 </script>
 
 <style scoped>
-@import "../assets/css/index.css";
-
 .dropdown:hover .dropdown-menu {
   display: block;
 }
