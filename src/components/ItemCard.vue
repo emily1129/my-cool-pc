@@ -29,7 +29,10 @@
           >
             {{ "$" + price }}
           </h3>
-          <button class="w-8 h-6 hover:bg-orange-500 bg-slate-600 px-2 rounded-sm text-white">
+          <button
+            class="w-8 h-6 md:w-10 md:h-8 text-md hover:bg-orange-500 bg-slate-600 px-2 text-white"
+            @click.stop="handleSvgButtonClick"
+          >
             <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
@@ -47,14 +50,14 @@
         </div>
       </div>
     </div>
-    <slot />
   </div>
 </template>
 
 <script>
+import { mapActions } from "vuex";
+
 export default {
   name: "ItemCard",
-  components: {},
   props: {
     id: {
       type: Number,
@@ -78,9 +81,24 @@ export default {
       default: false,
     },
   },
+  data() {
+    return {
+    };
+  },
   methods: {
+    ...mapActions(["addToCart"]),
     toItemDetail() {
       this.$router.push({ name: "ItemDetail", params: { itemId: this.id } });
+    },
+    handleSvgButtonClick() {
+      this.addToCart({
+        id: this.id,
+        title: this.title,
+        imgSrc: this.imgSrc,
+        price: this.price,
+        quantity: 1,
+      });
+      this.$emit('show-message', 'The item was succesfully added to you shopping cart.');
     },
   },
 };

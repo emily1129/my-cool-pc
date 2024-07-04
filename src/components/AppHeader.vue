@@ -8,7 +8,7 @@
       COOLPC
     </div>
     <!-- search -->
-    <div class="flex items-center mx-4 my-2">
+    <div class="flex items-center mx-4 my-2 dark:text-neutral-100">
       <input
         v-model="inputSearch"
         @input="handleSearch"
@@ -23,7 +23,7 @@
     <transition name="fade">
       <div
         v-if="showResults"
-        class="absolute top-16 left-0 w-full bg-white shadow-lg py-8 z-50"
+        class="absolute top-16 left-0 w-full bg-white dark:bg-slate-700 dark:text-neutral-50 shadow-lg py-8 z-50"
       >
         <div class="w-10/12 mx-auto">
           <h2 class="text-xl italic font-light mb-4">
@@ -35,20 +35,20 @@
                 v-for="item in filteredItems"
                 :key="item.id"
                 @click="toItemDetail(item.id)"
-                class="flex min-w-72 max-w-72 h-28 bg-white border border-gray-400 shadow-sm rounded-lg cursor-pointer"
+                class="flex min-w-72 max-w-72 h-28 bg-white dark:bg-slate-600 border border-slate-300 dark:border-slate-400 shadow-sm rounded-lg cursor-pointer"
               >
                 <img
                   src="https://dlcdnwebimgs.asus.com/gain/ac709e89-8fca-4cf5-b63b-f0426714078b/w185/fwebp"
                   :alt="item.title"
-                  class="w-1/2 h-28 object-cover border-r border-gray-400"
+                  class="w-1/2 h-auto object-cover border-r border-gray-400"
                 />
-                <div class="w-1/2 p-2 text-sm flex flex-col justify-between">
+                <div class="w-1/2 p-2 text-sm flex flex-col justify-between text-neutral-900 dark:text-neutral-50">
                   <p
-                    class="font-bold text-gray-900 overflow-hidden h-10 leading-tight"
+                    class="font-bold overflow-hidden h-10 leading-tight"
                   >
                     <span class="line-clamp-2">{{ item.title }}</span>
                   </p>
-                  <span class="text-gray-900 font-semibold mt-auto"
+                  <span class=" font-semibold mt-auto"
                     >${{ item.price }}</span
                   >
                 </div>
@@ -63,7 +63,7 @@
     </transition>
     <div class="ml-auto flex space-x-3 dark:text-slate-200">
       <DarkModeToggle />
-      <button class="text-xs my-auto">
+      <button class="text-xs my-auto" @click="openCartModal">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           fill="none"
@@ -80,17 +80,20 @@
         </svg>
       </button>
     </div>
+    <ShoppingCartModal :isOpen="cartModal" @close-modal="() => { cartModal = false; }" />
   </div>
 </template>
 
 <script>
 import DarkModeToggle from "./DarkModeToggle.vue";
+import ShoppingCartModal from "./ShoppingCartModal.vue";
 import mockData from "@/mockData";
 
 export default {
   name: "AppHeader",
   components: {
     DarkModeToggle,
+    ShoppingCartModal
   },
   data() {
     return {
@@ -99,6 +102,7 @@ export default {
       isDarkMode: false,
       filteredItems: [],
       items: [],
+      cartModal: false,
     };
   },
   methods: {
@@ -137,6 +141,9 @@ export default {
     },
     toItemDetail(itemId) {
       this.$router.push({ name: "ItemDetail", params: { itemId } });
+    },
+    openCartModal() {
+      this.cartModal = true;
     },
   },
   watch: {
