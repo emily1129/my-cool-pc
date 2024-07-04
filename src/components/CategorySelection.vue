@@ -46,13 +46,13 @@
       <li
         v-for="category in categories"
         :key="category.id"
-        class="border-b border-slate-200  dark:border-slate-600"
+        class="border-b border-slate-200 dark:border-slate-600"
       >
         <button
           @click="selectCategory(category)"
           :class="{
             'bg-pc-dark-blue text-white dark:bg-sky-500':
-              activeCategory && activeCategory.id === category.id,
+              activeCategory && activeCategory === category.name,
           }"
           class="w-full text-left px-4 py-2 flex justify-between items-center"
         >
@@ -66,13 +66,13 @@
 </template>
 
 <script>
+import { mapState, mapActions } from 'vuex';
+
 export default {
   name: "CategorySelection",
   data() {
     return {
       isMainCategoryOpen: true,
-      isCategoryOpen: {},
-      activeCategory: 0,
     };
   },
   props: {
@@ -85,47 +85,42 @@ export default {
       required: false,
     },
   },
+  computed: {
+    ...mapState(['activeCategory']),
+    currentCategoryName() {
+      return this.$route.query.category || this.categoryName;
+    },
+  },
+  watch: {
+    currentCategoryName: {
+      immediate: true,
+      handler(newCategoryName) {
+        this.setActiveCategory(newCategoryName);
+      },
+    },
+  },
   methods: {
+    ...mapActions(['setActiveCategory']),
     toggleMainCategory() {
       this.isMainCategoryOpen = !this.isMainCategoryOpen;
     },
     selectCategory(category) {
       this.$router.push({ query: { category: category.name } });
-      this.activeCategory = category;
+      this.setActiveCategory(category.name);
       this.$emit("category-selected", category.name);
     },
   },
-  watch: {
-    $route(to) {
-      if (to.query.category) {
-        this.activeCategory = this.categories.find(
-          (category) => category.name === to.query.category
-        );
-      }
-    },
-    categoryName(newCategoryName) {
-      if (newCategoryName) {
-        this.activeCategory = this.categories.find(
-          (category) => category.name === newCategoryName
-        );
-      }
-    },
+  activated() {
+    this.setActiveCategory(this.currentCategoryName);
   },
   mounted() {
-    if (this.$route.query.category) {
-      this.activeCategory = this.categories.find(
-        (category) => category.name === this.$route.query.category
-      );
-    }
+    this.setActiveCategory(this.currentCategoryName);
   },
 };
 </script>
 
 <style scoped>
-.bg-color {
+.bg-pc-dark-blue {
   background: rgb(26, 32, 44);
-}
-.card-border-color {
-  background-color: #06b6d4
 }
 </style>
