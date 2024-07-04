@@ -11,7 +11,7 @@
             v-for="m in 4"
             :key="m"
           >
-            <div class="h-48 bg-gray-300 rounded"></div>
+            <div class="h-64 bg-gray-300 rounded"></div>
             <div class="h-4 bg-gray-300 mt-2 rounded"></div>
             <div class="h-4 bg-gray-300 mt-2 rounded"></div>
             <div class="h-4 bg-gray-300 mt-2 rounded"></div>
