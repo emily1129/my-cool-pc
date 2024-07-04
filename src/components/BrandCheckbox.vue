@@ -75,12 +75,18 @@ export default {
   },
   watch: {
     selectedFilters(newFilters) {
+      this.updateRoute(newFilters);
       this.$emit("filters-changed", newFilters);
     },
   },
   methods: {
     toggleCheckbox() {
       this.isCheckboxOpen = !this.isCheckboxOpen;
+    },
+    updateRoute(filters) {
+      this.$router.push({
+        query: { ...this.$route.query, brand: filters.join(",") },
+      });
     },
   },
 };
