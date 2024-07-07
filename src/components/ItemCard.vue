@@ -1,29 +1,31 @@
 <template>
   <div class="group item-card-border" @click="toItemDetail">
-    <div class="flex flex-col h-full">
-      <div class="flex-grow w-full object-cover overflow-hidden">
+    <div :class="viewMode === 'card' ? 'flex flex-col h-full' : 'w-full flex h-16 space-x-2'">
+      <div :class="viewMode === 'card' ? 'w-full object-cover overflow-hidden' : ''">
         <div
-          class="w-auto h-48 m-auto rounded-t-sm border-b border-b-slate-300 dark:border-b-slate-500 transform transition-transform duration-500 group-hover:scale-125 bg-cover bg-center"
+          :class="viewMode === 'card' ? 'item-card-img' : 'item-list-img'"
           :style="{ backgroundImage: `url(${imgSrc})` }"
         ></div>
       </div>
-      <div class="flex flex-col justify-between h-48 p-3">
+      <div :class="viewMode === 'card' ? 'flex flex-col justify-between h-48 p-3' : 'flex flex-grow justify-between items-center'">
         <h5
-          class="font-normal text-slate-900 dark:text-slate-200 overflow-hidden line-clamp-2"
+          class="font-normal text-slate-900 dark:text-slate-200 overflow-hidden"
+          :class="viewMode === 'card' ? 'line-clamp-2' : 'w-1/3 md:w-28 line-clamp-1 mr-4'"
         >
           {{ title }}
         </h5>
-        <div v-if="isHotItem === true" class="w-11 border-gradient-hot-item">
+        <div v-if="isHotItem" class="w-11 h-7 border-gradient-hot-item">
           熱賣
         </div>
-        <div class="flex justify-between items-center mt-4">
+        <div :class="viewMode === 'card' ? 'flex justify-between items-center mt-4 text-xl' : 'w-24 text-right pr-3 text-lg'">
           <h3
-            class="my-auto text-xl font-medium text-slate-900 dark:text-slate-200 tracking-wide"
+            class="my-auto font-medium text-slate-900 dark:text-slate-200 tracking-wide"
           >
             $ {{ price }}
           </h3>
           <button
-            class="w-10 h-6 md:w-10 md:h-8 px-3 hover:shadow-lg text-md text-slate-700 dark:text-white border border-slate-600 dark:bg-slate-500 hover:dark:bg-orange-600"
+            class="w-10 h-6 md:w-10 px-3 hover:shadow-lg text-md text-slate-700 dark:text-white border border-slate-600 dark:bg-slate-500 hover:dark:bg-orange-600"
+            :class="viewMode === 'card' ? 'md:h-8' : ''"
             @click.stop="addToVuexCart"
           >
             <svg
@@ -46,6 +48,7 @@
   </div>
 </template>
 
+
 <script>
 import { mapActions } from "vuex";
 
@@ -63,7 +66,6 @@ export default {
     imgSrc: {
       type: String,
       default: "src/assets/cool-1.jpeg",
-      // default: () => `https://source.unsplash.com/random?sig=${Math.floor(Math.random() * 10)}`
     },
     price: {
       type: Number,
@@ -72,6 +74,11 @@ export default {
     isHotItem: {
       type: Boolean,
       default: false,
+    },
+    viewMode: {
+      type: String,
+      required: true,
+      default: "card",
     },
   },
   methods: {
@@ -100,8 +107,14 @@ export default {
 </script>
 
 <style scoped>
+.item-card-img {
+  @apply w-auto h-48 m-auto rounded-t-sm border-b border-b-slate-300 dark:border-b-slate-500 transform transition-transform duration-500 group-hover:scale-125 bg-cover bg-center;
+}
+.item-list-img {
+  @apply w-20 h-16 rounded-t-sm border-b border-b-slate-300 dark:border-b-slate-500 transform transition-transform duration-500 bg-cover bg-center;
+}
 .item-card-border {
-  @apply h-96 bg-white shadow-md rounded-md;
+  @apply bg-white shadow-md rounded-md;
   border: 1.5px solid white;
   border-radius: 0.4rem;
   border-image-slice: 1;

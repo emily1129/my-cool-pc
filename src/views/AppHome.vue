@@ -19,10 +19,8 @@
 
       <!-- Main Content -->
       <div v-else>
-        <div
-          v-for="category in displayedCategories"
-          :key="category.id"
-        >
+        <ItemStyleToggle class="absolute w-20 mr-4 right-0 top-2" @view-mode-changed="handleViewModeChange" />
+        <div v-for="category in displayedCategories" :key="category.id" class="mb-5">
           <div class="border-b border-slate-500 mb-4">
             <p
               class="p-2 text-3xl font-semibold text-slate-900 dark:text-slate-200 tracking-wide"
@@ -46,13 +44,18 @@
               <div
                 v-for="item in getLimitedItems(category)"
                 :key="item.id"
-                class="w-1/4 lg:w-1/3 md:w-1/2 sm:w-full p-3"
+                :class="
+                  viewMode === 'card'
+                    ? 'w-1/4 lg:w-1/3 md:w-1/2 sm:w-full p-3'
+                    : 'w-full h-16 mb-1 p-3'
+                "
               >
                 <ItemCard
                   class="cursor-pointer"
                   v-bind="item"
                   :category-name="category.name"
                   :id="Number(item.id)"
+                  :viewMode="viewMode"
                   @show-message="showSuccessAlert"
                 />
               </div>
@@ -63,9 +66,9 @@
             >
               <button
                 @click="seeMore(category)"
-                class="m-2 px-2 py-1 rounded-md hover:shadow-lg text-xs text-slate-600 dark:text-slate-400 dark:hover:text-slate-100 border border-slate-400 dark:hover:border-slate-100 ease-in transition-shadow transform duration-200"
+                class="m-5 px-4 py-2 rounded-full hover:shadow-lg text-xs font-normal hover:font-semibold text-slate-600 dark:text-slate-400 dark:hover:text-slate-300 border border-slate-400 dark:hover:border-slate-100 ease-in transition-shadow transform duration-200"
               >
-                See More...
+                SEE MORE
               </button>
             </div>
           </template>
@@ -80,7 +83,7 @@
     <ShowMessage v-if="showSuccess" :duration="3000" />
     <button
       @click="scrollToTop"
-      class="fixed bottom-6 right-6 border border-blue-500 text-blue-500 p-4 py-2 shadow-lg hover:text-white hover:bg-gradient-to-r hover:from-sky-600 hover:to-indigo-600 focus:outline-none"
+      class="fixed bottom-6 right-6 border border-slate-600 text-slate-600 p-4 py-2 shadow-lg hover:bg-pc-dark-blue hover:text-slate-50 dark:hover:bg-slate-500 focus:outline-none"
     >
       ↑
     </button>
@@ -95,6 +98,7 @@ import BrandCheckbox from "@/components/BrandCheckbox";
 import PriceSlider from "@/components/PriceSlider";
 import ItemSkeleton from "@/components/ItemSkeleton";
 import ShowMessage from "@/components/SuccessMessage.vue";
+import ItemStyleToggle from "@/components/ItemStyleToggle.vue";
 import mockData from "@/mockData";
 import { mapState, mapActions } from "vuex";
 
@@ -108,6 +112,7 @@ export default {
     BrandCheckbox,
     PriceSlider,
     ShowMessage,
+    ItemStyleToggle,
   },
   data() {
     return {
@@ -116,6 +121,7 @@ export default {
       uniqueBrands: [],
       categoryPriceRanges: {}, // price ranges for each category
       showSuccess: false,
+      viewMode: "card", // Default mode
     };
   },
   props: {
@@ -223,6 +229,9 @@ export default {
     showSuccessAlert() {
       this.showSuccess = true;
       setTimeout(() => (this.showSuccess = false), 3000);
+    },
+    handleViewModeChange(mode) {
+      this.viewMode = mode;
     },
     scrollToTop() {
       window.scrollTo({ top: 0, behavior: "smooth" });
