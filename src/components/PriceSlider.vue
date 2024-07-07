@@ -8,7 +8,7 @@
           :style="{ left: `${leftPercent}%`, right: `${rightPercent}%` }"
         ></div>
       </div>
-      <div class="range-input relative w-48">
+      <div class="range-input w-48 relative">
         <input
           :id="'price-' + id"
           type="range"

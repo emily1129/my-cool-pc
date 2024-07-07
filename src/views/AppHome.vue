@@ -1,6 +1,6 @@
 <template>
-  <div class="w-full space-y-4 mx-auto flex md:flex-col">
-    <div class="w-1/4 md:w-full h-auto mr-2 md:mx-0 sticky top-0">
+  <div class="w-full mx-auto flex md:flex-col">
+    <div class="w-1/4 md:w-full h-auto mr-10 md:mx-0 space-y-6 md:mb-3">
       <!-- Left Sidebar -->
       <CategorySelection
         :categories="categories"
@@ -13,68 +13,77 @@
       />
     </div>
 
-    <!-- Loading Skeleton -->
-    <ItemSkeleton
-      v-if="isLoading"
-      class="w-3/4 md:w-full mx-auto transform space-y-5"
-    />
+    <div class="w-3/4 md:w-full mx-auto transform space-y-5">
+      <!-- Loading Skeleton -->
+      <ItemSkeleton v-if="isLoading" class="py-3" />
 
-    <!-- Main Content -->
-    <div v-else class="w-3/4 md:w-full mx-auto transform space-y-5">
-      <div
-        v-for="category in displayedCategories"
-        :key="category.id"
-        class="mb-6"
-      >
-        <div class="border-b border-slate-500 mb-4">
-          <p class="category-name">{{ category.name }}</p>
-        </div>
-        <div class="flex md:flex-col justify-start">
-          <SortSelect v-model="category.selectedSort" :id="category.id" />
-          <PriceSlider
-            :maxPrice="getMaxPrice(category)"
-            @price-changed="
-              (priceRange) => handleCategoryPriceChange(priceRange, category.id)
-            "
-            :id="category.id"
-          />
-        </div>
-        <template v-if="category.items.length">
-          <div class="flex content-start flex-wrap max-w-6xl m-auto">
-            <div
-              v-for="item in getLimitedItems(category)"
-              :key="item.id"
-              class="w-1/4 lg:w-1/3 md:w-1/2 sm:w-full p-3"
+      <!-- Main Content -->
+      <div v-else>
+        <div
+          v-for="category in displayedCategories"
+          :key="category.id"
+        >
+          <div class="border-b border-slate-500 mb-4">
+            <p
+              class="p-2 text-3xl font-semibold text-slate-900 dark:text-slate-200 tracking-wide"
             >
-              <ItemCard
-                class="cursor-pointer"
-                v-bind="item"
-                :category-name="category.name"
-                :id="Number(item.id)"
-                @show-message="showSuccessAlert"
-              />
+              {{ category.name }}
+            </p>
+          </div>
+          <div class="flex md:flex-col justify-start">
+            <SortSelect v-model="category.selectedSort" :id="category.id" />
+            <PriceSlider
+              :maxPrice="getMaxPrice(category)"
+              @price-changed="
+                (priceRange) =>
+                  handleCategoryPriceChange(priceRange, category.id)
+              "
+              :id="category.id"
+            />
+          </div>
+          <template v-if="category.items.length">
+            <div class="flex flex-wrap m-auto">
+              <div
+                v-for="item in getLimitedItems(category)"
+                :key="item.id"
+                class="w-1/4 lg:w-1/3 md:w-1/2 sm:w-full p-3"
+              >
+                <ItemCard
+                  class="cursor-pointer"
+                  v-bind="item"
+                  :category-name="category.name"
+                  :id="Number(item.id)"
+                  @show-message="showSuccessAlert"
+                />
+              </div>
             </div>
-          </div>
-          <div
-            v-if="showSeeMoreButton(category)"
-            class="flex justify-center mt-4"
-          >
-            <button
-              @click="seeMore(category)"
-              class="border rounded-full m-2 px-3 py-2 text-xs text-slate-700 dark:text-slate-300 dark:hover:text-slate-900 border-slate-400 hover:bg-font-normal hover:shadow-lg ease-in transition-shadow transform duration-200"
+            <div
+              v-if="showSeeMoreButton(category)"
+              class="flex justify-center mt-4"
             >
-              See More...
-            </button>
-          </div>
-        </template>
-        <template v-else>
-          <div class="max-w-6xl text-center dark:text-slate-300">
-            No Matching Results!
-          </div>
-        </template>
+              <button
+                @click="seeMore(category)"
+                class="m-2 px-2 py-1 rounded-md hover:shadow-lg text-xs text-slate-600 dark:text-slate-400 dark:hover:text-slate-100 border border-slate-400 dark:hover:border-slate-100 ease-in transition-shadow transform duration-200"
+              >
+                See More...
+              </button>
+            </div>
+          </template>
+          <template v-else>
+            <div class="max-w-6xl text-center dark:text-slate-300">
+              No Matching Results!
+            </div>
+          </template>
+        </div>
       </div>
     </div>
-    <ShowMessage v-if="showSuccess" :message="message" :duration="3000" />
+    <ShowMessage v-if="showSuccess" :duration="3000" />
+    <button
+      @click="scrollToTop"
+      class="fixed bottom-6 right-6 border border-blue-500 text-blue-500 p-4 py-2 shadow-lg hover:text-white hover:bg-gradient-to-r hover:from-sky-600 hover:to-indigo-600 focus:outline-none"
+    >
+      ↑
+    </button>
   </div>
 </template>
 
@@ -105,7 +114,6 @@ export default {
       isLoading: true,
       categories: [],
       uniqueBrands: [],
-      selectedPrice: [1, 10000],
       categoryPriceRanges: {}, // price ranges for each category
       showSuccess: false,
     };
@@ -119,29 +127,21 @@ export default {
   computed: {
     ...mapState(["activeCategory"]),
     displayedCategories() {
-      if (this.activeCategory) {
-        return this.categories.filter(
-          (category) => category.name === this.activeCategory
-        );
-      }
-      return this.categories;
+      return this.activeCategory
+        ? this.categories.filter(
+            (category) => category.name === this.activeCategory
+          )
+        : this.categories;
     },
     sortedItems() {
       return (category) => {
-        if (category.selectedSort === "title-asc") {
-          return [...category.items].sort((a, b) =>
-            a.title.localeCompare(b.title)
-          );
-        } else if (category.selectedSort === "title-desc") {
-          return [...category.items].sort((a, b) =>
-            b.title.localeCompare(a.title)
-          );
-        } else if (category.selectedSort === "price-asc") {
-          return [...category.items].sort((a, b) => a.price - b.price);
-        } else if (category.selectedSort === "price-desc") {
-          return [...category.items].sort((a, b) => b.price - a.price);
-        }
-        return category.items;
+        const sortFunctions = {
+          "title-asc": (a, b) => a.title.localeCompare(b.title),
+          "title-desc": (a, b) => b.title.localeCompare(a.title),
+          "price-asc": (a, b) => a.price - b.price,
+          "price-desc": (a, b) => b.price - a.price,
+        };
+        return [...category.items].sort(sortFunctions[category.selectedSort]);
       };
     },
   },
@@ -159,6 +159,7 @@ export default {
           limit: 4,
         }));
 
+        // for dynamic brand checkbox
         this.uniqueBrands = [
           ...new Set(
             this.categories.flatMap((category) =>
@@ -171,7 +172,7 @@ export default {
         if (this.categoryName) {
           this.setActiveCategory(this.categoryName);
         }
-      }, 2000);
+      }, 500);
     },
     handleCategorySelected(categoryName) {
       this.setActiveCategory(categoryName);
@@ -179,17 +180,10 @@ export default {
     },
     handleBrandSelection(selectedBrands) {
       this.categories.forEach((category) => {
-        if (selectedBrands.length === 0) {
-          // show all items if no brands are selected
-          category.items = mockData.find(
-            (data) => data.id === category.id
-          ).items;
-        } else {
-          // otherwise filter items by selected brands
-          category.items = mockData
-            .find((data) => data.id === category.id)
-            .items.filter((item) => selectedBrands.includes(item.brand));
-        }
+        const items = mockData.find((data) => data.id === category.id).items;
+        category.items = selectedBrands.length
+          ? items.filter((item) => selectedBrands.includes(item.brand))
+          : items;
       });
     },
     updateURL(categoryName) {
@@ -226,12 +220,12 @@ export default {
       );
       return categoryMaxValue;
     },
-    showSuccessAlert(message) {
-      this.message = message;
+    showSuccessAlert() {
       this.showSuccess = true;
-      setTimeout(() => {
-        this.showSuccess = false;
-      }, 3000);
+      setTimeout(() => (this.showSuccess = false), 3000);
+    },
+    scrollToTop() {
+      window.scrollTo({ top: 0, behavior: "smooth" });
     },
   },
 };
@@ -245,14 +239,5 @@ export default {
 .filter:hover,
 .filter.active {
   @apply bg-pc-dark-blue text-white;
-}
-.category-name {
-  @apply max-w-6xl m-auto text-3xl font-medium p-4;
-  color: rgba(var(--neutral-light));
-}
-
-.dark-body {
-  @apply block text-sm font-medium mr-3;
-  color: rgba(var(--slate-body));
 }
 </style>

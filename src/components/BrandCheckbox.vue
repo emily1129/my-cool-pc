@@ -1,8 +1,8 @@
 <template>
-  <div class="h-auto mx-5 md:mx-1">
+  <div class="h-auto">
     <button
       @click="toggleCheckbox"
-      class="flex justify-between items-center w-full bg-neutral-50 text-left text-lg font-bold border border-slate-200 text-slate-800 hover:text-sky-600 p-3 shadow-sm dark:border dark:border-slate-500 dark:bg-slate-800 dark:text-white"
+      class="flex justify-between items-center w-full sidebar-style"
     >
       <div class="flex">
         <svg
@@ -40,7 +40,7 @@
     </button>
     <ul
       v-if="isCheckboxOpen"
-      class="border-t border-slate-200 bg-white dark:border dark:border-slate-500 dark:bg-slate-800 p-4"
+      class="border border-slate-200 bg-white dark:border-slate-600 dark:bg-slate-800 px-4"
     >
       <li
         v-for="(filter, index) in uniqueBrands"
@@ -52,9 +52,9 @@
           :id="filter"
           v-model="selectedFilters"
           :value="filter"
-          class="form-checkbox h-5 w-5 text-blue-600"
+          class="form-checkbox h-4 w-4  text-slate-900 dark:text-slate-200"
         />
-        <label :for="filter" class="text-slate-800 dark:text-slate-300">{{ filter }}</label>
+        <label :for="filter" class=" text-slate-900 dark:text-slate-200">{{ filter }}</label>
       </li>
     </ul>
   </div>
@@ -95,18 +95,20 @@ export default {
 .form-checkbox {
   appearance: none;
   border-radius: 0.25rem;
-  border: 2px solid #d1d5db;
-  background-color: transparent;
-  transition: background-color 150ms, border-color 150ms;
+  border: 1.5px solid #374151;
   cursor: pointer;
 }
 
+.dark .form-checkbox {
+  border: 1.5px solid #94a3b8;
+}
+
 .form-checkbox:checked {
-  background-color: #3b82f6;
-  border-color: #3b82f6;
-  background-image: url("data:image/svg+xml;base64,PHN2ZyBmaWxsPSJub25lIiBzdHJva2U9IiNmZmYiIHZpZXdCb3g9IjAgMCAyNCAyNCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cGF0aCBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS13aWR0aD0iMiIgZD0iTTEwIDE2bDctNy0yLTJhNiA2IDAgMCAxIDAtMTIgMCA2IDYgMCAwIDEgMiA0bDEgMWwtNSA1eiIvPjwvc3ZnPg==");
+  @apply bg-pc-dark-blue border-pc-dark-blue bg-center;
   background-size: 0.65rem;
-  background-position: center;
-  background-repeat: no-repeat;
+}
+.dark .form-checkbox:checked {
+  @apply bg-sky-500 border-sky-500 bg-center;
+  background-size: 0.65rem;
 }
 </style>

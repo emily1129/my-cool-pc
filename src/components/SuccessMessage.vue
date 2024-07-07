@@ -21,7 +21,7 @@
         </svg>
       </div>
       <div class="ml-3 mr-12 text-green-700">
-        {{ message }}
+        The item was succesfully added to you shopping cart.
       </div>
     </div>
   </transition>
@@ -29,12 +29,8 @@
 
 <script>
 export default {
-  name: "ShowMessage",
+  name: "SuccessMessage",
   props: {
-    message: {
-      type: String,
-      required: true,
-    },
     duration: {
       type: Number,
       default: 3000,

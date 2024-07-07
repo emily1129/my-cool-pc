@@ -4,14 +4,14 @@
       class="absolute inset-0 bg-black opacity-50"
       @click="$emit('close-modal')"
     ></div>
-    <transition name="slide-in">
+    <transition name="slide">
       <div
+        v-show="isOpen"
         class="relative w-full max-w-2xl bg-white dark:bg-slate-700 h-full shadow-lg transform transition-transform duration-300 ease-in-out"
-        :class="{ 'translate-x-0': isOpen, 'translate-x-full': !isOpen }"
       >
         <button
-          @click="$emit('close-modal')"
           class="absolute top-4 right-4 text-4xl text-slate-600 hover:text-slate-800 dark:text-slate-100"
+          @click="$emit('close-modal')"
         >
           &times;
         </button>
@@ -64,16 +64,12 @@
               </div>
             </li>
           </ul>
-          <!-- <button
-            @click="continueToPayment"
-            class="flex justify-between w-full absolute bottom-0 right-0 bg-slate-500 text-white font-bold p-4 hover:bg-slate-900"
-          > -->
           <button
             @click="continueToPayment"
             class="flex justify-between w-full absolute bottom-0 right-0 bg-orange-500 text-white font-bold p-4 hover:bg-orange-600"
           >
             <p>Proceed to checkout</p>
-            <p>$ {{ orderTotal }}</p>
+            <p class="tracking-wide">$ {{ orderTotal }}</p>
           </button>
         </div>
       </div>
@@ -106,7 +102,6 @@ export default {
   methods: {
     ...mapActions(["removeFromCart", "updateQuantity"]),
     continueToPayment() {
-      // Implement the payment logic here
       alert("Continue to payment");
     },
   },
@@ -121,14 +116,13 @@ export default {
   right: 0;
   bottom: 0;
 }
-.slide-in-enter-active,
-.slide-in-leave-active {
-  transition: transform 0.3s ease;
+
+.slide-enter-active,
+.slide-leave-active {
+  transition: all 0.3s ease-in-out;
 }
-.slide-in-enter {
-  transform: translateX(100%);
-}
-.slide-in-leave-to {
+.slide-enter-from,
+.slide-leave-to {
   transform: translateX(100%);
 }
 </style>

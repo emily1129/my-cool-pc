@@ -1,9 +1,10 @@
 <template>
   <div
-    class="flex items-center w-full border-b-3 shadow-lg border-gradient border-gradient-blue bg-white dark:bg-slate-900 z-50"
+    class="flex items-center w-full mb-6 border-b-3 shadow-lg border-gradient border-gradient-blue bg-white dark:bg-slate-900 z-50"
   >
     <div
       class="w-48 mr-2 text-slate-800 dark:text-slate-50 text-5xl header-font"
+      @click="toHome()"
     >
       COOLPC
     </div>
@@ -42,15 +43,13 @@
                   :alt="item.title"
                   class="w-1/2 h-auto object-cover border-r border-gray-400"
                 />
-                <div class="w-1/2 p-2 text-sm flex flex-col justify-between text-neutral-900 dark:text-neutral-50">
-                  <p
-                    class="font-bold overflow-hidden h-10 leading-tight"
-                  >
+                <div
+                  class="w-1/2 p-2 text-sm flex flex-col justify-between text-neutral-900 dark:text-neutral-50"
+                >
+                  <p class="font-bold overflow-hidden h-10 leading-tight">
                     <span class="line-clamp-2">{{ item.title }}</span>
                   </p>
-                  <span class=" font-semibold mt-auto"
-                    >${{ item.price }}</span
-                  >
+                  <span class="font-semibold mt-auto">${{ item.price }}</span>
                 </div>
               </div>
             </div>
@@ -80,7 +79,14 @@
         </svg>
       </button>
     </div>
-    <ShoppingCartModal :isOpen="cartModal" @close-modal="() => { cartModal = false; }" />
+    <ShoppingCartModal
+      :isOpen="cartModal"
+      @close-modal="
+        () => {
+          cartModal = false;
+        }
+      "
+    />
   </div>
 </template>
 
@@ -93,22 +99,18 @@ export default {
   name: "AppHeader",
   components: {
     DarkModeToggle,
-    ShoppingCartModal
+    ShoppingCartModal,
   },
   data() {
     return {
       inputSearch: "",
       showResults: false,
-      isDarkMode: false,
       filteredItems: [],
       items: [],
       cartModal: false,
     };
   },
   methods: {
-    expandSearch() {
-      this.showResults = true;
-    },
     fetchData() {
       this.items = mockData;
       this.filteredItems = this.items.flatMap((category) => category.items);
@@ -134,6 +136,9 @@ export default {
         this.filteredItems = allItems;
       }
     },
+    expandSearch() {
+      this.showResults = true;
+    },
     collapseSearch() {
       setTimeout(() => {
         this.showResults = false;
@@ -141,6 +146,9 @@ export default {
     },
     toItemDetail(itemId) {
       this.$router.push({ name: "ItemDetail", params: { itemId } });
+    },
+    toHome() {
+      this.$router.push({ name: "AppHome" });
     },
     openCartModal() {
       this.cartModal = true;
@@ -158,16 +166,7 @@ export default {
 .header-font {
   font-family: "Jersey 25", sans-serif;
 }
-.border-gradient {
-  border-bottom: solid;
-  border-image-slice: 1;
-}
-.border-gradient-blue {
-  border-image-source: linear-gradient(to right, #3f97fc, #343b61);
-}
-.bg-grad {
-  background: linear-gradient(to right, #4b579d, #347afc, #3f97fc, #343b61);
-}
+
 .fade-enter-active,
 .fade-leave-active {
   transition: opacity 0.5s;

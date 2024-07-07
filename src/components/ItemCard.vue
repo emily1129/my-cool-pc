@@ -1,37 +1,31 @@
 <template>
-  <div
-    class="group bg-white h-96 shadow-md border-1 border-neutral-200 overflow-hidden item-card-border dark:dark-item-card-border hover:drop-shadow-xl dark:bg-slate-700 rounded-md hover:rounded-md"
-    @click="toItemDetail"
-  >
+  <div class="group item-card-border" @click="toItemDetail">
     <div class="flex flex-col h-full">
-      <div class="flex-grow w-full object-cover rounded-b-none overflow-hidden">
+      <div class="flex-grow w-full object-cover overflow-hidden">
         <img
           src="https://dlcdnwebimgs.asus.com/gain/ac709e89-8fca-4cf5-b63b-f0426714078b/w185/fwebp"
           alt="item-img"
-          class="w-auto h-full border-b border-b-slate-300 transform transition-transform duration-500 group-hover:scale-125 bg-cover bg-center bg-origin-content m-auto"
+          class="w-auto h-full m-auto border-b border-b-slate-300 dark:border-b-slate-500 transform transition-transform duration-500 group-hover:scale-125 bg-cover bg-center bg-origin-content"
         />
       </div>
-      <div class="p-3 h-48 flex flex-col justify-between">
+      <div class="flex flex-col justify-between h-48 p-3">
         <h5
-          class="title text-slate-900 font-normal text-md overflow-hidden line-clamp-2 dark:text-white"
+          class="font-normal text-slate-900 dark:text-slate-200 overflow-hidden line-clamp-2"
         >
           {{ title }}
         </h5>
-        <div
-          v-if="isHotItem === true"
-          class="w-11 px-2 text-xs border border-hot-item py-0.5 border-gradient text-red-600 dark:text-red-500"
-        >
+        <div v-if="isHotItem === true" class="w-11 border-gradient-hot-item">
           熱賣
         </div>
-        <div class="mt-4 flex justify-between items-center">
+        <div class="flex justify-between items-center mt-4">
           <h3
-            class="my-auto text-xl text-slate-500 font-medium dark:text-slate-300 tracking-wide"
+            class="my-auto text-xl font-medium text-slate-900 dark:text-slate-200 tracking-wide"
           >
-            {{ "$" + price }}
+            $ {{ price }}
           </h3>
           <button
-            class="w-8 h-6 md:w-10 md:h-8 text-md hover:bg-orange-500 bg-slate-600 px-2 text-white"
-            @click.stop="handleSvgButtonClick"
+            class="w-10 h-6 md:w-10 md:h-8 px-3 hover:shadow-lg text-md text-slate-700 dark:text-white border border-slate-600 dark:bg-slate-500 hover:dark:bg-orange-600"
+            @click.stop="addToVuexCart"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -43,7 +37,7 @@
               <path
                 stroke-linecap="round"
                 stroke-linejoin="round"
-                d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 0 0-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 0 0-16.536-1.84M7.5 14.25 5.106 5.272M6 20.25a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Zm12.75 0a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Z"
+                d="M15.75 10.5V6a3.75 3.75 0 1 0-7.5 0v4.5m11.356-1.993 1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 0 1-1.12-1.243l1.264-12A1.125 1.125 0 0 1 5.513 7.5h12.974c.576 0 1.059.435 1.119 1.007ZM8.625 10.5a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm7.5 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z"
               />
             </svg>
           </button>
@@ -81,24 +75,27 @@ export default {
       default: false,
     },
   },
-  data() {
-    return {
-    };
-  },
   methods: {
     ...mapActions(["addToCart"]),
     toItemDetail() {
       this.$router.push({ name: "ItemDetail", params: { itemId: this.id } });
     },
-    handleSvgButtonClick() {
+    addToVuexCart() {
       this.addToCart({
         id: this.id,
         title: this.title,
         imgSrc: this.imgSrc,
         price: this.price,
         quantity: 1,
-      });
-      this.$emit('show-message', 'The item was succesfully added to you shopping cart.');
+      })
+        .then(() => {
+          this.$emit("show-message");
+          setTimeout(() => {
+          }, 2000);
+        })
+        .catch((error) => {
+          console.error("Failed to add item to cart:", error);
+        });
     },
   },
 };
@@ -106,24 +103,24 @@ export default {
 
 <style scoped>
 .item-card-border {
+  @apply h-96 bg-white shadow-md rounded-md;
   border: 1.5px solid white;
   border-image-slice: 1;
 }
-.dark .item-card-border {
-  border: 1.5px solid #334155;
+.item-card-border:hover {
+  @apply drop-shadow-xl;
+  border: 1.5px solid;
+  border-image-source: linear-gradient(to right, #2277d9, #31385e);
   border-image-slice: 1;
 }
-.item-card-border:hover {
-  border: 1.5px solid;
-  border-image: linear-gradient(to right, #2277d9, #31385e);
+.dark .item-card-border {
+  @apply dark:bg-slate-700;
+  border: 1.5px solid #334155;
   border-image-slice: 1;
 }
 .dark .item-card-border:hover {
   border: 1.5px solid;
-  border-image: linear-gradient(to right, #06b6d4, rgb(196, 179, 255));
+  border-image-source: linear-gradient(to right, #06b6d4, rgb(196, 179, 255));
   border-image-slice: 1;
-}
-.border-hot-item {
-  border-image-source: linear-gradient(to right, #ff9213, #ff3737);
 }
 </style>
