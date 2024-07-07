@@ -106,6 +106,7 @@ export default {
     currentItemId: {
       immediate: true,
       handler(newVal) {
+        this.quantity = 1;
         this.fetchItemDetail(newVal);
       },
     },
