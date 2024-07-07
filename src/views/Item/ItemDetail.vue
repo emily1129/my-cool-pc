@@ -3,13 +3,12 @@
     class="flex md:flex-col justify-center items-center w-full my-4 p-5 md:pb-12 bg-white dark:bg-slate-700 rounded-md"
   >
     <div
-      class="flex flex-col relative items-center justify-center w-1/2 md:w-full h-full"
+      class="flex flex-col px-12 md:p-3 relative items-center justify-center w-1/2 md:w-full h-full"
     >
-      <img
-        src="https://dlcdnwebimgs.asus.com/gain/ac709e89-8fca-4cf5-b63b-f0426714078b/w185/fwebp"
-        alt="item-img"
-        class="w-2/3 transform transition-transform duration-500 group-hover:scale-125 bg-cover bg-center"
-      />
+      <div
+        class="w-full h-64 transform transition-transform duration-500 group-hover:scale-125 bg-cover bg-center"
+        :style="{ backgroundImage: `url(${item.imgSrc})` }"
+      ></div>
     </div>
     <div
       class="flex flex-col items-start justify-between w-1/2 md:w-full px-3 space-y-6"

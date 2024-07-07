@@ -2,11 +2,10 @@
   <div class="group item-card-border" @click="toItemDetail">
     <div class="flex flex-col h-full">
       <div class="flex-grow w-full object-cover overflow-hidden">
-        <img
-          src="https://dlcdnwebimgs.asus.com/gain/ac709e89-8fca-4cf5-b63b-f0426714078b/w185/fwebp"
-          alt="item-img"
-          class="w-auto h-full m-auto border-b border-b-slate-300 dark:border-b-slate-500 transform transition-transform duration-500 group-hover:scale-125 bg-cover bg-center bg-origin-content"
-        />
+        <div
+          class="w-auto h-48 m-auto rounded-t-sm border-b border-b-slate-300 dark:border-b-slate-500 transform transition-transform duration-500 group-hover:scale-125 bg-cover bg-center"
+          :style="{ backgroundImage: `url(${imgSrc})` }"
+        ></div>
       </div>
       <div class="flex flex-col justify-between h-48 p-3">
         <h5
@@ -90,8 +89,7 @@ export default {
       })
         .then(() => {
           this.$emit("show-message");
-          setTimeout(() => {
-          }, 2000);
+          setTimeout(() => {}, 2000);
         })
         .catch((error) => {
           console.error("Failed to add item to cart:", error);
@@ -105,11 +103,13 @@ export default {
 .item-card-border {
   @apply h-96 bg-white shadow-md rounded-md;
   border: 1.5px solid white;
+  border-radius: 0.4rem;
   border-image-slice: 1;
 }
 .item-card-border:hover {
   @apply drop-shadow-xl;
   border: 1.5px solid;
+  border-radius: 0.4rem;
   border-image-source: linear-gradient(to right, #2277d9, #31385e);
   border-image-slice: 1;
 }
@@ -120,6 +120,7 @@ export default {
 }
 .dark .item-card-border:hover {
   border: 1.5px solid;
+  border-radius: 0.4rem;
   border-image-source: linear-gradient(to right, #06b6d4, rgb(196, 179, 255));
   border-image-slice: 1;
 }
