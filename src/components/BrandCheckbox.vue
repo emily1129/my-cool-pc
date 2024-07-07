@@ -76,7 +76,7 @@ export default {
   watch: {
     selectedFilters(newFilters) {
       this.updateRoute(newFilters);
-      this.$emit("filters-changed", newFilters);
+      this.$emit("brand-changed", newFilters);
     },
   },
   methods: {

@@ -1,15 +1,12 @@
 <template>
   <div class="w-full mx-auto flex md:flex-col">
     <div class="w-1/4 md:w-full h-auto mr-10 md:mx-0 space-y-6 md:mb-3">
-      <!-- Left Sidebar -->
-      <CategorySelection
+      <HomeSidebar
         :categories="categories"
         :category-name="categoryName"
-        @category-selected="handleCategorySelected"
-      />
-      <BrandCheckbox
         :unique-brands="uniqueBrands"
-        @filters-changed="handleBrandSelection"
+        @category-selected="handleCategorySelected"
+        @brand-changed="handleBrandSelection"
       />
     </div>
 
@@ -19,8 +16,15 @@
 
       <!-- Main Content -->
       <div v-else>
-        <ItemStyleToggle class="absolute w-20 mr-4 right-0 top-2" @view-mode-changed="handleViewModeChange" />
-        <div v-for="category in displayedCategories" :key="category.id" class="mb-5">
+        <ItemStyleToggle
+          class="absolute w-20 mr-4 right-0 top-2"
+          @view-mode-changed="handleViewModeChange"
+        />
+        <div
+          v-for="category in displayedCategories"
+          :key="category.id"
+          class="mb-5"
+        >
           <div class="border-b border-slate-500 mb-4">
             <p
               class="p-2 text-3xl font-semibold text-slate-900 dark:text-slate-200 tracking-wide"
@@ -66,7 +70,7 @@
             >
               <button
                 @click="seeMore(category)"
-                class="m-5 px-4 py-2 rounded-full hover:shadow-lg text-xs font-normal hover:font-semibold text-slate-600 dark:text-slate-400 dark:hover:text-slate-300 border border-slate-400 dark:hover:border-slate-100 ease-in transition-shadow transform duration-200"
+                class="m-5 px-4 py-2 rounded-full hover:shadow-lg text-xs font-normal hover:font-semibold text-slate-600 dark:text-slate-300 dark:hover:text-slate-200 border border-slate-400 dark:hover:border-slate-100 ease-in transition-shadow transform duration-200"
               >
                 SEE MORE
               </button>
@@ -93,8 +97,7 @@
 <script>
 import ItemCard from "@/components/ItemCard";
 import SortSelect from "@/components/SortSelect";
-import CategorySelection from "@/components/CategorySelection";
-import BrandCheckbox from "@/components/BrandCheckbox";
+import HomeSidebar from "@/components/HomeSidebar";
 import PriceSlider from "@/components/PriceSlider";
 import ItemSkeleton from "@/components/ItemSkeleton";
 import ShowMessage from "@/components/SuccessMessage.vue";
@@ -108,8 +111,7 @@ export default {
     ItemCard,
     SortSelect,
     ItemSkeleton,
-    CategorySelection,
-    BrandCheckbox,
+    HomeSidebar,
     PriceSlider,
     ShowMessage,
     ItemStyleToggle,
@@ -118,6 +120,7 @@ export default {
     return {
       isLoading: true,
       categories: [],
+      originalCategories: [], // store the initial state of the data
       uniqueBrands: [],
       categoryPriceRanges: {}, // price ranges for each category
       showSuccess: false,
@@ -165,6 +168,9 @@ export default {
           limit: 4,
         }));
 
+        // store original data for filtering function
+        this.originalCategories = JSON.parse(JSON.stringify(this.categories));
+
         // for dynamic brand checkbox
         this.uniqueBrands = [
           ...new Set(
@@ -186,7 +192,9 @@ export default {
     },
     handleBrandSelection(selectedBrands) {
       this.categories.forEach((category) => {
-        const items = mockData.find((data) => data.id === category.id).items;
+        const items = this.originalCategories.find(
+          (data) => data.id === category.id
+        ).items;
         category.items = selectedBrands.length
           ? items.filter((item) => selectedBrands.includes(item.brand))
           : items;
@@ -196,6 +204,7 @@ export default {
       this.$router.push({ name: "Category", params: { categoryName } });
     },
     getLimitedItems(category) {
+      // display the nr of cards
       return this.sortedItems(category).slice(0, category.limit);
     },
     showSeeMoreButton(category) {
@@ -213,7 +222,7 @@ export default {
         (category) => category.id === categoryId
       );
       if (category) {
-        category.items = mockData
+        category.items = this.originalCategories
           .find((data) => data.id === category.id)
           .items.filter(
             (item) => item.price >= minPrice && item.price <= maxPrice
@@ -221,6 +230,7 @@ export default {
       }
     },
     getMaxPrice(category) {
+      // dynamic passing to the child component for the max slider
       const categoryMaxValue = Math.max(
         ...category.items.map((item) => item.price)
       );
