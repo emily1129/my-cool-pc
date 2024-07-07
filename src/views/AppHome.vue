@@ -87,7 +87,7 @@
     <ShowMessage v-if="showSuccess" :duration="3000" />
     <button
       @click="scrollToTop"
-      class="fixed bottom-6 right-6 border border-slate-600 text-slate-600 p-4 py-2 shadow-lg hover:bg-pc-dark-blue hover:text-slate-50 dark:hover:bg-slate-500 focus:outline-none"
+      class="fixed bottom-6 right-6 border border-slate-600 dark:border-slate-200 text-slate-600 dark:text-slate-200 p-4 py-2 shadow-lg hover:bg-pc-dark-blue hover:text-slate-50 dark:hover:bg-pc-dark-blue focus:outline-none"
     >
       ↑
     </button>

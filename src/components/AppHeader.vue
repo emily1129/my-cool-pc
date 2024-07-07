@@ -1,6 +1,6 @@
 <template>
   <div
-    class="flex items-center w-full mb-6 border-b-3 shadow-lg border-gradient border-gradient-blue bg-white dark:bg-slate-900 z-50"
+    class="flex items-center w-full mb-6 border-b-3 shadow-lg border-gradient border-gradient-blue bg-white dark-bg z-50"
   >
     <div
       class="w-48 mr-2 text-slate-800 dark:text-slate-50 text-5xl header-font"
@@ -175,4 +175,10 @@ export default {
 .fade-leave-to {
   opacity: 0;
 }
+.dark .dark-bg{
+  --background: 26, 32, 44;
+  --slate-body: 148 163 184;
+  background: rgba(var(--background));
+}
+
 </style>
