@@ -13,7 +13,7 @@
     <div
       class="flex flex-col items-start justify-between w-1/2 md:w-full px-3 space-y-6"
     >
-      <div v-if="item.isHotItem === true" class="border-gradient-hot-item my-2">
+      <div v-if="item.isHotItem" class="border-gradient-hot-item my-2">
         熱賣
       </div>
       <h5 class="text-xl text-slate-700 dark:text-slate-200">
@@ -84,8 +84,13 @@ import { mapActions } from "vuex";
 
 export default {
   name: "ItemDetail",
-  props: ["itemId"],
   components: { ItemSpec, ShowMessage },
+  props: {
+    itemId: {
+      type: [Number, String],
+      required: true,
+    },
+  },
   data() {
     return {
       item: {},
@@ -103,12 +108,11 @@ export default {
     },
   },
   watch: {
-    currentItemId: {
-      immediate: true,
-      handler(newVal) {
+    $route(to, from) {
+      if (to.params.itemId !== from.params.itemId) {
         this.quantity = 1;
-        this.fetchItemDetail(newVal);
-      },
+        this.fetchItemDetail(to.params.itemId);
+      }
     },
   },
   methods: {
