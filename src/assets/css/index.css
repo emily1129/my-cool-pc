@@ -1,0 +1,53 @@
+:root {
+  --pc-blue: #2277D9;
+  --pc-dark-blue: #1B2459;
+}
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  /* font-family: 'Roboto', sans-serif; */
+  /* font-family: "MuseoModerno", sans-serif; */
+  font-family: "Barlow", sans-serif;
+  font-weight: 300;
+  font-style: normal;
+}
+
+* {
+  @apply transition-colors duration-200 ;
+}
+
+.light {
+  --background: 245, 245, 245;
+  --slate-body: 51 65 85;
+  background: rgba(var(--background));
+}
+
+.dark {
+  --background: 26, 32, 44;
+  --slate-body: 148 163 184;
+  background: rgba(var(--background));
+}
+
+.dark-body {
+  @apply block text-sm font-medium mr-3;
+  color: rgba(var(--slate-body));
+}
+
+.sidebar-style {
+  @apply p-3 bg-slate-50 text-left text-lg font-bold shadow-sm border border-slate-200 text-slate-800 hover:text-lightBlue-600 dark:text-white dark:border-slate-500 dark:bg-slate-800;
+}
+
+.border-gradient-blue {
+  border-bottom: solid;
+  border-image-slice: 1;
+  border-image-source: linear-gradient(to right, #3f97fc, #343b61);
+}
+
+.border-gradient-hot-item {
+  @apply border text-xs px-2 py-1 text-red-600 dark:text-red-500 inline-block;
+  border-image-slice: 1;
+  border-image-source: linear-gradient(to right, #ff9213, #ff6565);
+}
