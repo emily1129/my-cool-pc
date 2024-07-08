@@ -11,10 +11,8 @@
     </div>
 
     <div class="w-3/4 md:w-full mx-auto transform space-y-5">
-      <!-- Loading Skeleton -->
       <ItemSkeleton v-if="isLoading" class="py-3" />
 
-      <!-- Main Content -->
       <div v-else>
         <ItemStyleToggle
           class="absolute w-20 mr-4 right-0 top-2"
@@ -23,7 +21,7 @@
         <div
           v-for="category in displayedCategories"
           :key="category.id"
-          class="mb-5"
+          class="mb-8"
         >
           <div class="border-b border-slate-500 mb-4">
             <p
@@ -36,10 +34,7 @@
             <SortSelect v-model="category.selectedSort" :id="category.id" />
             <PriceSlider
               :maxPrice="getMaxPrice(category)"
-              @price-changed="
-                (priceRange) =>
-                  handleCategoryPriceChange(priceRange, category.id)
-              "
+              @price-changed="(priceRange) => handleCategoryPriceChange(priceRange, category.id)"
               :id="category.id"
             />
           </div>
@@ -48,11 +43,7 @@
               <div
                 v-for="item in getLimitedItems(category)"
                 :key="item.id"
-                :class="
-                  viewMode === 'card'
-                    ? 'w-1/4 lg:w-1/3 md:w-1/2 sm:w-full p-3'
-                    : 'w-full h-16 mb-1 p-3'
-                "
+                :class="viewMode === 'card' ? 'w-1/4 lg:w-1/3 md:w-1/2 sm:w-full p-3' : 'w-full h-16 mb-1 p-3'"
               >
                 <ItemCard
                   class="cursor-pointer"
@@ -122,7 +113,8 @@ export default {
       categories: [],
       originalCategories: [], // store the initial state of the data
       uniqueBrands: [],
-      categoryPriceRanges: {}, // price ranges for each category
+      selectedBrands: [],
+      priceRanges: {}, // price ranges for each category
       showSuccess: false,
       viewMode: "card", // Default mode
     };
@@ -137,9 +129,7 @@ export default {
     ...mapState(["activeCategory"]),
     displayedCategories() {
       return this.activeCategory
-        ? this.categories.filter(
-            (category) => category.name === this.activeCategory
-          )
+        ? this.categories.filter((category) => category.name === this.activeCategory)
         : this.categories;
     },
     sortedItems() {
@@ -168,16 +158,10 @@ export default {
           limit: 4,
         }));
 
-        // store original data for filtering function
         this.originalCategories = JSON.parse(JSON.stringify(this.categories));
 
-        // for dynamic brand checkbox
         this.uniqueBrands = [
-          ...new Set(
-            this.categories.flatMap((category) =>
-              category.items.map((item) => item.brand)
-            )
-          ),
+          ...new Set(this.categories.flatMap((category) => category.items.map((item) => item.brand))),
         ];
 
         this.isLoading = false;
@@ -191,20 +175,36 @@ export default {
       this.updateURL(categoryName);
     },
     handleBrandSelection(selectedBrands) {
-      this.categories.forEach((category) => {
-        const items = this.originalCategories.find(
-          (data) => data.id === category.id
-        ).items;
-        category.items = selectedBrands.length
-          ? items.filter((item) => selectedBrands.includes(item.brand))
-          : items;
+      this.selectedBrands = selectedBrands;
+      this.applyFilters();
+    },
+    handleCategoryPriceChange(newPrice, categoryId) {
+      this.$set(this.priceRanges, categoryId, newPrice);
+      this.applyFilters();
+    },
+    applyFilters() {
+      this.categories = this.originalCategories.map((category) => {
+        let items = category.items;
+
+        if (this.selectedBrands.length > 0) {
+          items = items.filter((item) => this.selectedBrands.includes(item.brand));
+        }
+
+        if (this.priceRanges[category.id]) {
+          const [minPrice, maxPrice] = this.priceRanges[category.id];
+          items = items.filter((item) => item.price >= minPrice && item.price <= maxPrice);
+        }
+
+        return {
+          ...category,
+          items,
+        };
       });
     },
     updateURL(categoryName) {
       this.$router.push({ name: "Category", params: { categoryName } });
     },
     getLimitedItems(category) {
-      // display the nr of cards
       return this.sortedItems(category).slice(0, category.limit);
     },
     showSeeMoreButton(category) {
@@ -213,27 +213,9 @@ export default {
     seeMore(category) {
       category.limit += 4;
     },
-    handleCategoryPriceChange(newPrice, categoryId) {
-      this.$set(this.categoryPriceRanges, categoryId, newPrice);
-      this.filterItemsByCategoryPrice(newPrice, categoryId);
-    },
-    filterItemsByCategoryPrice([minPrice, maxPrice], categoryId) {
-      const category = this.categories.find(
-        (category) => category.id === categoryId
-      );
-      if (category) {
-        category.items = this.originalCategories
-          .find((data) => data.id === category.id)
-          .items.filter(
-            (item) => item.price >= minPrice && item.price <= maxPrice
-          );
-      }
-    },
     getMaxPrice(category) {
       // dynamic passing to the child component for the max slider
-      const categoryMaxValue = Math.max(
-        ...category.items.map((item) => item.price)
-      );
+      const categoryMaxValue = Math.max(...category.items.map((item) => item.price));
       return categoryMaxValue;
     },
     showSuccessAlert() {
