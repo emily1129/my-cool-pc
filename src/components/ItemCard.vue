@@ -10,11 +10,11 @@
       <div :class="viewMode === 'card' ? 'flex flex-col justify-between h-48 p-3' : 'flex flex-grow justify-between items-center'">
         <h5
           class="font-normal text-slate-900 dark:text-slate-200 overflow-hidden"
-          :class="viewMode === 'card' ? 'line-clamp-2' : 'w-1/3 md:w-24 line-clamp-1 mr-4'"
+          :class="viewMode === 'card' ? 'line-clamp-2' : 'w-1/3 md:w-16 line-clamp-1 mr-4'"
         >
           {{ title }}
         </h5>
-        <div v-if="isHotItem" class="w-11 h-7 border-gradient-hot-item">
+        <div v-if="isHotItem" class="w-11 border-gradient-hot-item">
           熱賣
         </div>
         <div :class="viewMode === 'card' ? 'flex justify-between items-center mt-4 text-xl' : 'w-20 text-right pr-3 text-lg'">
@@ -24,7 +24,7 @@
             $ {{ price }}
           </h3>
           <button
-            class="w-12 h-6 md:w-10 px-4 md:px-3 hover:shadow-lg text-md text-white bg-pc-dark-blue dark:bg-slate-500 opacity-90 hover:bg-orange-600"
+            class="w-12 md:w-10 h-6 px-4 md:px-3 hover:shadow-lg text-md text-white bg-pc-dark-blue dark:bg-slate-500 opacity-90 hover:bg-orange-600"
             :class="viewMode === 'card' ? 'md:h-8' : ''"
             @click.stop="addToVuexCart"
           >
@@ -111,7 +111,7 @@ export default {
   @apply w-auto h-48 m-auto rounded-t-sm border-b border-b-slate-300 dark:border-b-slate-500 transform transition-transform duration-500 group-hover:scale-125 bg-cover bg-center;
 }
 .item-list-img {
-  @apply w-20 h-16 rounded-t-sm border-b border-b-slate-300 dark:border-b-slate-500 transform transition-transform duration-500 bg-cover bg-center;
+  @apply w-20 md:w-16 h-16 rounded-t-sm border-b border-b-slate-300 dark:border-b-slate-500 transform transition-transform duration-500 bg-cover bg-center;
 }
 .item-card-border {
   @apply bg-white shadow-md rounded-md;

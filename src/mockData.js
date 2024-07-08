@@ -16,7 +16,6 @@ Mock.Random.extend({
     return this.pick(brands);
   },
 });
-// Function to generate a random photo URL
 Mock.Random.extend({
   photo: function () {
     return `https://picsum.photos/200?random=${Mock.Random.integer(1, 1000)}`;
