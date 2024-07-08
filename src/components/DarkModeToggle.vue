@@ -127,7 +127,6 @@ export default {
 .tooltip .tooltiptext:nth-of-type(1) {
   top: 30px;
 }
-
 .tooltip .tooltiptext:nth-of-type(2) {
   top: 40px;
 }

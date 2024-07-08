@@ -1,6 +1,6 @@
 <template>
   <div
-    class="flex text-slate-700 justify-center items-center h-8 border border-slate-300 dark:border-slate-400 rounded-lg overflow-hidden"
+    class="flex text-slate-700 justify-center items-center h-8 border border-slate-300 dark:border-slate-400 bg-neutral-100 dark:bg-slate-800 rounded-lg overflow-hidden"
   >
     <button
       @click="toggleView('list')"
@@ -47,6 +47,7 @@
 
 <script>
 export default {
+  name: "ItemStyleToggle",
   data() {
     return {
       viewMode: "card", // Default view mode
