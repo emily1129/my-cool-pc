@@ -1,30 +1,54 @@
 <template>
   <div class="group item-card-border" @click="toItemDetail">
-    <div :class="viewMode === 'card' ? 'flex flex-col h-full' : 'w-full flex h-16 space-x-2'">
-      <div :class="viewMode === 'card' ? 'w-full object-cover overflow-hidden' : ''">
+    <div
+      :class="
+        viewMode === 'card'
+          ? 'flex flex-col h-full'
+          : 'w-full flex h-16 space-x-2'
+      "
+    >
+      <div
+        :class="
+          viewMode === 'card' ? 'w-full object-cover overflow-hidden' : ''
+        "
+      >
         <div
           :class="viewMode === 'card' ? 'item-card-img' : 'item-list-img'"
           :style="{ backgroundImage: `url(${imgSrc})` }"
         ></div>
       </div>
-      <div :class="viewMode === 'card' ? 'flex flex-col justify-between h-48 p-3' : 'flex flex-grow justify-between items-center'">
+      <div
+        :class="
+          viewMode === 'card'
+            ? 'flex flex-col justify-between h-48 p-3'
+            : 'flex flex-grow justify-between items-center'
+        "
+      >
         <h5
           class="font-normal text-slate-900 dark:text-slate-200 overflow-hidden"
-          :class="viewMode === 'card' ? 'line-clamp-2' : 'w-1/3 md:w-16 line-clamp-1 mr-4'"
+          :class="
+            viewMode === 'card'
+              ? 'line-clamp-2'
+              : 'w-1/3 md:w-16 line-clamp-1 mr-4'
+          "
         >
           {{ title }}
         </h5>
-        <div v-if="isHotItem" class="w-11 border-gradient-hot-item">
-          熱賣
-        </div>
-        <div :class="viewMode === 'card' ? 'flex justify-between items-center mt-4 text-xl' : 'w-20 text-right pr-3 text-lg'">
+        <div v-if="isHotItem" class="w-11 border-gradient-hot-item">熱賣</div>
+        <div
+          :class="
+            viewMode === 'card'
+              ? 'flex justify-between items-center mt-4 text-xl'
+              : 'w-20 text-right pr-3 text-lg'
+          "
+        >
           <h3
             class="my-auto font-medium text-slate-900 dark:text-slate-200 tracking-wide"
           >
             $ {{ price }}
           </h3>
           <button
-            class="w-12 md:w-10 h-6 px-4 md:px-3 hover:shadow-lg text-md text-white bg-pc-dark-blue dark:bg-slate-500 opacity-90 hover:bg-orange-600"
+            class="w-12 md:w-10 h-6 px-4 md:px-3 hover:shadow-lg text-md text-white bg-pc-dark-blue dark:bg-slate-500 opacity-90 hover:bg-orange-600 dark:hover:bg-orange-600"
             :class="viewMode === 'card' ? 'md:h-8' : ''"
             @click.stop="addToVuexCart"
           >
@@ -47,7 +71,6 @@
     </div>
   </div>
 </template>
-
 
 <script>
 import { mapActions } from "vuex";
@@ -93,14 +116,9 @@ export default {
         imgSrc: this.imgSrc,
         price: this.price,
         quantity: 1,
-      })
-        .then(() => {
-          this.$emit("show-message");
-          setTimeout(() => {}, 2000);
-        })
-        .catch((error) => {
-          console.error("Failed to add item to cart:", error);
-        });
+      });
+      this.$emit("show-message");
+      setTimeout(() => {}, 2000);
     },
   },
 };
