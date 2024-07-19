@@ -6,7 +6,7 @@
       class="w-48 mr-2 text-slate-800 dark:text-slate-50 text-5xl header-font"
       @click="$router.push({ name: 'AppHome' })"
     >
-      COOLPC
+      COOLEM
     </div>
     <!-- search -->
     <div class="flex items-center mx-4 my-2 dark:text-neutral-100">
