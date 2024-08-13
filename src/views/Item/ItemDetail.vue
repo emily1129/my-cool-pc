@@ -5,10 +5,29 @@
     <div
       class="flex flex-col px-12 md:p-3 relative items-center justify-center w-1/2 md:w-full h-full"
     >
-      <div
-        class="w-full h-64 transform transition-transform duration-500 group-hover:scale-125 bg-cover bg-center"
-        :style="{ backgroundImage: `url(${item.imgSrc})` }"
-      ></div>
+      <div class="w-full flex-col">
+        <div class="absolute text-slate-700 dark:text-slate-300 top-0 cursor-pointer flex" @click="$router.back()">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke-width="1.5"
+            stroke="currentColor"
+            class="size-4 mr-2 mt-1"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M9 15 3 9m0 0 6-6M3 9h12a6 6 0 0 1 0 12h-3"
+            />
+          </svg>
+          <span class="font-normal">Back</span>
+        </div>
+        <div
+          class="w-full h-64 transform transition-transform duration-500 group-hover:scale-125 bg-cover bg-center sm:mt-8"
+          :style="{ backgroundImage: `url(${item.imgSrc})` }"
+        ></div>
+      </div>
     </div>
     <div
       class="flex flex-col items-start justify-between w-1/2 md:w-full px-3 space-y-6"

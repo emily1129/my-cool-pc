@@ -6,7 +6,7 @@
       class="w-48 mr-2 text-slate-800 dark:text-slate-50 text-5xl header-font"
       @click="$router.push({ name: 'AppHome' })"
     >
-      COOLEM
+      <span class="cursor-pointer"> COOLPC </span>
     </div>
     <!-- search -->
     <div class="flex items-center mx-4 my-2 dark:text-neutral-100">
@@ -62,7 +62,14 @@
     </transition>
     <div class="ml-auto flex space-x-3 dark:text-slate-200">
       <DarkModeToggle />
-      <button class="text-xs my-auto" @click="() => { cartModal = true; }">
+      <button
+        class="text-xs my-auto"
+        @click="
+          () => {
+            cartModal = true;
+          }
+        "
+      >
         <svg
           xmlns="http://www.w3.org/2000/svg"
           fill="none"
@@ -81,11 +88,23 @@
     </div>
     <AppModal
       :toggle="cartModal"
-      :backdrop="() => { cartModal = false; }"
+      :backdrop="
+        () => {
+          cartModal = false;
+        }
+      "
     >
       <ShoppingCartModal
-        @login="() => { cartModal = false; }"
-        @close-modal="() => { cartModal = false; }"
+        @login="
+          () => {
+            cartModal = false;
+          }
+        "
+        @close-modal="
+          () => {
+            cartModal = false;
+          }
+        "
       />
     </AppModal>
   </div>
@@ -94,7 +113,7 @@
 <script>
 import DarkModeToggle from "./DarkModeToggle.vue";
 import ShoppingCartModal from "./ShoppingCartModal.vue";
-import AppModal from '@/components/AppModal';
+import AppModal from "@/components/AppModal";
 import mockData from "@/mockData";
 
 export default {
@@ -102,7 +121,7 @@ export default {
   components: {
     DarkModeToggle,
     ShoppingCartModal,
-    AppModal
+    AppModal,
   },
   data() {
     return {
@@ -178,10 +197,9 @@ export default {
 .fade-leave-to {
   opacity: 0;
 }
-.dark .dark-bg{
+.dark .dark-bg {
   --background: 26, 32, 44;
   --slate-body: 148 163 184;
   background: rgba(var(--background));
 }
-
 </style>
