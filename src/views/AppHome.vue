@@ -158,9 +158,11 @@ export default {
           limit: 4,
         }));
 
+        // if this.categories is modified, it won't influence originalCategories and remain the original
         this.originalCategories = JSON.parse(JSON.stringify(this.categories));
 
         this.uniqueBrands = [
+          // extract unique vale in the array
           ...new Set(this.categories.flatMap((category) => category.items.map((item) => item.brand))),
         ];
 
@@ -191,6 +193,7 @@ export default {
         }
 
         if (this.priceRanges[category.id]) {
+          console.log(category.id, this.priceRanges)
           const [minPrice, maxPrice] = this.priceRanges[category.id];
           items = items.filter((item) => item.price >= minPrice && item.price <= maxPrice);
         }

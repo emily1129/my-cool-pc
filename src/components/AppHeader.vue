@@ -1,15 +1,15 @@
 <template>
   <div
-    class="flex items-center w-full mb-6 border-b-3 shadow-lg border-gradient border-gradient-blue bg-white dark-bg z-50"
+    class="flex items-center w-full mb-6 border-b-3 shadow-lg border-gradient border-gradient-blue bg-white dark-bg"
   >
     <div
-      class="w-48 mr-2 text-slate-800 dark:text-slate-50 text-5xl header-font z-50"
+      class="w-48 mr-2 text-slate-800 dark:text-slate-50 text-5xl header-font"
       @click="$router.push({ name: 'AppHome' })"
     >
-      COOLPC
+      <span class="cursor-pointer"> COOLPC </span>
     </div>
     <!-- search -->
-    <div class="flex items-center mx-4 my-2 dark:text-neutral-100 z-50">
+    <div class="flex items-center mx-4 my-2 dark:text-neutral-100">
       <input
         v-model="inputSearch"
         @input="handleSearch"
@@ -60,9 +60,16 @@
         </div>
       </div>
     </transition>
-    <div class="ml-auto flex space-x-3 dark:text-slate-200 z-50">
+    <div class="ml-auto flex space-x-3 dark:text-slate-200">
       <DarkModeToggle />
-      <button class="text-xs my-auto" @click="toggleCartModal">
+      <button
+        class="text-xs my-auto"
+        @click="
+          () => {
+            cartModal = true;
+          }
+        "
+      >
         <svg
           xmlns="http://www.w3.org/2000/svg"
           fill="none"
@@ -79,17 +86,34 @@
         </svg>
       </button>
     </div>
-    <ShoppingCartModal
-      :isOpen="cartModal"
-      @close-modal="toggleCartModal"
-    />
-    <div v-if="showBackdrop" class="absolute top-48 inset-0 bg-black opacity-50 z-40"></div>
+    <AppModal
+      :toggle="cartModal"
+      :backdrop="
+        () => {
+          cartModal = false;
+        }
+      "
+    >
+      <ShoppingCartModal
+        @login="
+          () => {
+            cartModal = false;
+          }
+        "
+        @close-modal="
+          () => {
+            cartModal = false;
+          }
+        "
+      />
+    </AppModal>
   </div>
 </template>
 
 <script>
 import DarkModeToggle from "./DarkModeToggle.vue";
 import ShoppingCartModal from "./ShoppingCartModal.vue";
+import AppModal from "@/components/AppModal";
 import mockData from "@/mockData";
 
 export default {
@@ -97,6 +121,7 @@ export default {
   components: {
     DarkModeToggle,
     ShoppingCartModal,
+    AppModal,
   },
   data() {
     return {
@@ -141,15 +166,15 @@ export default {
     collapseSearch() {
       setTimeout(() => {
         this.showResults = false;
-        this.showBackdrop = false;
+        // this.showBackdrop = false;
       }, 200);
     },
     toItemDetail(itemId) {
       this.$router.push({ name: "ItemDetail", params: { itemId } });
     },
-    toggleCartModal() {
-      this.cartModal = !this.cartModal;
-    },
+    // toggleCartModal() {
+    //   this.cartModal = !this.cartModal;
+    // },
   },
   watch: {
     inputSearch(newVal) {
@@ -172,10 +197,9 @@ export default {
 .fade-leave-to {
   opacity: 0;
 }
-.dark .dark-bg{
+.dark .dark-bg {
   --background: 26, 32, 44;
   --slate-body: 148 163 184;
   background: rgba(var(--background));
 }
-
 </style>

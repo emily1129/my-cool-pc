@@ -9,22 +9,22 @@ const routes = [
     redirect: { name: "AppHome" },
   },
   {
-    path: '/',
-    name: 'AppHome',
+    path: "/",
+    name: "AppHome",
     component: () => import("@/views/AppHome.vue"),
   },
   {
-  path: '/category/:categoryName',
-    name: 'Category',
+    path: "/category/:categoryName",
+    name: "Category",
     component: () => import("@/views/AppHome.vue"),
     props: (route) => ({ categoryName: route.params.categoryName }),
   },
   {
-    path: '/item/:itemId',
-    name: 'ItemDetail',
+    path: "/item/:itemId",
+    name: "ItemDetail",
     component: () => import("@/views/Item/ItemDetail.vue"),
     props: (route) => ({ itemId: route.params.itemId }),
-  }
+  },
 ];
 
 const router = new VueRouter({
