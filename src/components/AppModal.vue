@@ -1,10 +1,10 @@
 <template>
   <portal to="modal">
-    <div class="modal-mask" :style="modalStyle">
+    <div class="modal-mask fixed" :style="modalStyle">
       <transition name="slide">
         <div
           v-if="toggle"
-          class="fixed inset-0 flex justify-end overflow-hidden"
+          class="fixed inset-0 flex justify-end"
           @click.self="typeof backdrop === 'function' && backdrop()"
         >
           <slot />
@@ -39,7 +39,6 @@ export default {
 
 <style scoped>
 .modal-mask {
-  position: absolute;
   z-index: 10;
   top: 0;
   left: 0;
